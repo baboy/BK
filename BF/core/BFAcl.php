@@ -1,21 +1,26 @@
-<?
+<?php
 namespace bf\core;
 
-class Acl{
+class BFAcl{
 	private $roles = array();
 	static function getInstance($config){
 		if (empty($config)) {
-			return;
+			return false;
 		}
-		$acl = new Acl();
+
+		global $_acl;
+		if (!$_acl) {
+			$_acl = new BFAcl( $config);
+		}
+
 		$roles = array();
 		for ($i=0, $n = count($config); $i < $n; $i++) { 
-			$role = new Role($config[$i]);
+			$role = new BFRole($config[$i]);
 			$rid = $role->rid;
 			$roles[$rid] = $role;
 		}
-		$acl->roles = $roles;
-		return $acl;
+		$_acl->roles = $roles;
+		return $_acl;
 	}
 	public function getRole($rid){
 		return $this->roles[$rid];
@@ -66,5 +71,21 @@ class Acl{
 			}
 		}
 		return false;
+	}
+}
+class BFRole{
+	public $rid = null;
+	public $parent = null;
+	public $routes = array();
+	function __construct($data = null){
+		if (empty($data)) {
+			return;
+		}
+		$this->rid = $data["rid"];
+		$this->parent = $data["parent"];
+		$routes = $data["routes"];
+		for ($i=0, $n = count($routes); $i < $n; $i++) { 
+			$this->routes[] = new Route($routes[$i]);
+		}
 	}
 }
