@@ -2,11 +2,14 @@
 namespace bf\core;
 
 $dir = dirname(__file__);
+require_once $dir."/../lib/function.php";
 require_once $dir."/ApplicationContext.php";
 require_once $dir."/BFObjectManager.php";
 require_once $dir."/BFRouteManager.php";
 require_once $dir."/BFAcl.php";
 require_once $dir."/Dao.php";
+require_once $dir."/status.php";
+require_once $dir."/validator.php";
 class ApplicationConfig{
 	public function getContextConfig(){
 		return null;

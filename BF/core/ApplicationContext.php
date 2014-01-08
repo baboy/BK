@@ -29,13 +29,29 @@ class ApplicationContext{
 	function execute(){
 		//获取当前路由
 		$route = $this->router->getCurrentRoute();
+		if (empty($route)) {
+			header("HTTP/1.0 404 Not Found");
+			exit;
+		}
+
 		$action = $route->action;
 		$class = $route->class;
 		//获取路由代理
 		$obj = $this->objectManager->getObjectProxy( $class );
 		$obj->db = $this->db;
+		$obj->init();
+		//check param
+		$paramAction = $action."Param";
+		$fields = $obj->$paramAction();
+		$validator = new Validator($fields);
+		$param = $validator->check();
+		if(!$param->isSuccess()){
+			echo json_encode($param);
+			return;
+		}
+		$param = $param->data;
 		//执行action
-		$data = $obj->$action();
+		$data = $obj->$action($param);
 		if($route->result->type == "json"){
 			if(!empty($data))
 				echo json_encode($data);

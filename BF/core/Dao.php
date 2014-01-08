@@ -17,9 +17,17 @@ class Dao extends DB{
 	}
 	function __call($name, $args){
 		$sql = $this->getSql($name);
+		if(!empty($args)){
+			foreach ($args[0] as $key => $value) {
+				$sql = str_replace("{".$key."}", $value, $sql);
+			}
+		}
 		$ret = $this->query($sql);
 		return $ret;
 	}
 	function execute(){
+	}
+	function getModel($modelName){
+		return new $modelName($this->config);
 	}
 }

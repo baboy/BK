@@ -85,7 +85,7 @@ class BFObjectProxy{
 			$this->file 	= isset($data["file"]) ? $data["file"] : $data["class"];
 			$this->class 	= $data["class"];
 			$this->action 	= $data["action"];
-			$this->args 	= $data["args"];
+			$this->args 	= empty($data["args"])?null:$data["args"];
 		}
 		$this->aop = $aop;
 	}
@@ -108,12 +108,12 @@ class BFObjectProxy{
 		$obj = $this->getProxyObject();
 		$proxy = new \ReflectionClass($obj);
 		$method = $proxy->getMethod($name);
-		$aspectId = $class . "." . $name;
+		$aspectId = $this->class . "." . $name;
 		$aop = isset( $this->aop[$aspectId] ) ? $this->aop[$aspectId] : false;
 		//aop:before
 		// TODO:
 		$this->callAspect("before", $aop);
-		$ret = $method->invoke($obj, $this->args);
+		$ret = $method->invokeArgs($obj, $args);
 		//aop:after
 		//TODO:
 		$this->callAspect("after", $aop);

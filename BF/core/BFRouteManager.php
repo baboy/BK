@@ -30,15 +30,20 @@ class BFRouteManager{
 	*/
 	function getCurrentRoute(){
 		$path = $_SERVER["REQUEST_URI"];
+		$pos = strpos($path, "?");
+		if ($pos !== false){
+			$path = substr($path, 0, $pos);
+		}
+		$prefix = "/bf";
+		if(!empty($prefix) && startsWith($path, $prefix)){
+			$path = substr($path, strlen($prefix));
+		}
 		$routeConf = isset( $this->routes[$path] ) ? $this->routes[$path] : null;
+		if (empty($routeConf)) {
+			return false;
+		}
 		$route = new BFRoute( $routeConf);
 		return $route;
-		foreach ($this->routes as $route) {
-			if ($route->path == $path) {
-				return $route;
-			}
-		}
-		return false;
 	}
 }
 class BFRoute{
