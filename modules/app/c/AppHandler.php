@@ -13,7 +13,6 @@ class AppHandler extends bf\core\HttpRequestHandler{
 	function registerParam(){
 		$fields = array(
 				"name"			=>array("type"=>"string"),
-				"product_id"	=>array("type"=>"string"),
 				"package"		=>array("type"=>"string"),
 				"version"		=>array("type"=>"string"),
 				"build"			=>array("type"=>"int"),
@@ -26,13 +25,24 @@ class AppHandler extends bf\core\HttpRequestHandler{
 	function register($param){
 		$ret = $this->model->register($param);
 		if (empty($ret)) {
+			$status = bf\core\Status::error();
+			$status->error = $this->model->last_error;
+			return $status;
+		}
+		$status = bf\core\Status::status();
+		$param["id"] = $ret;
+		$status->data = $param;
+		return $status;
+	}
+	function query($param){
+		$data = $this->model->query($param);
+		if (empty($data)) {
 			$status = Status::error();
 			$status->error = $this->model->last_error;
 			return $status;
 		}
-		$status = Status::status();
-		$param["id"] = $ret;
-		$status->data = $param;
+		$status = bf\core\Status::status();
+		$status->data = $data;
 		return $status;
 	}
 }

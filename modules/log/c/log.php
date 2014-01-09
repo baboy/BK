@@ -63,7 +63,7 @@ class LoggerHandler extends bf\core\HttpRequestHandler{
 		$deviceParam = $this->checkFields($this->logDeviceParam(),$param["device"]);
 		if(!$deviceParam->isSuccess())
 			return $deviceParam;
-		$device = $this->model->getUniqueDevice($deviceParam->data["appkey"],$deviceParam->data["product_id"],$deviceParam->data["device_id"],$deviceParam->data["package"]);
+		$device = $this->model->getUniqueDevice($deviceParam->data["appkey"],$deviceParam->data["device_id"],$deviceParam->data["package"]);
 		//如果没有注册，就注册设备
 		if(empty($device)){
 			$sno = $this->model->registerDevice($deviceParam->data);

@@ -17,7 +17,6 @@ class ApplicationContext{
 		$this->objectManager = new BFObjectManager($config->getContextConfig());
 		$this->objectManager->loadObjects($config->getRouteConfig());
 		$this->db = new Dao($config->getSqlConfig());
-
 	}
 	static function getInstance($config){
 		global $_applicationContext;
@@ -55,13 +54,15 @@ class ApplicationContext{
 		}
 		
 		//执行action
-		$data = $obj->$action($param);
+		$status = $obj->$action($param);
 		if($route->result->type == "json"){
-			if(!empty($data))
-				echo json_encode($data);
+			if(!empty($status))
+				echo json_encode($status);
 		}else{
-			if(!empty($data))
-				extract($data);
+			extract($GLOBALS);
+			if(!empty($status)){
+				extract(array("data"=>$status->data));
+			}
 			include WEB_ROOT_DIR."/tpl/".$route->result->view;
 
 		}

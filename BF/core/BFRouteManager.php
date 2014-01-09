@@ -34,7 +34,7 @@ class BFRouteManager{
 		if ($pos !== false){
 			$path = substr($path, 0, $pos);
 		}
-		$prefix = "/bf";
+		$prefix = $GLOBALS["path_prefix"];
 		if(!empty($prefix) && startsWith($path, $prefix)){
 			$path = substr($path, strlen($prefix));
 		}
