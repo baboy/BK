@@ -106,6 +106,10 @@ class BFObjectProxy{
 	//拦截 代理方法 执行aop
 	function __call($name, $args){
 		$obj = $this->getProxyObject();
+		if (!method_exists($obj, $name)) {
+			return false;
+		}
+
 		$proxy = new \ReflectionClass($obj);
 		$method = $proxy->getMethod($name);
 		$aspectId = $this->class . "." . $name;

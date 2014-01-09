@@ -1,6 +1,6 @@
 <?php
-class Logger{
-	private $model;
+class LoggerHandler extends bf\core\HttpRequestHandler{
+	
 	function getModel($modelName){
 		if (empty($this->model)) {
 			require_once dirname(__FILE__)."/../m/$modelName.php";
@@ -9,7 +9,7 @@ class Logger{
 		return $this->model;
 	}
 	function init(){
-		$this->getModel("LogModel");
+		$this->getModel("AppLogger");
 	}
 	function logParam(){
 		$fields = array(
@@ -17,17 +17,12 @@ class Logger{
 			);
 		return $fields;
 	}
-	function checkFields($fields, $value){
-		$validator = new bf\core\Validator($fields);
-		$validator->setValue($value);
-		return $validator->check();
-	}
 	// device 参数
 	function logDeviceParam(){
 		$fields = array(
 				"appkey"=>array("type"=>"string"),
 				"package"=>array("type"=>"string"),
-				"product_id"=>array("type"=>"string"),
+				"product_id"=>array("type"=>"string","option"=>true),
 				"build"=>array("type"=>"int"),
 				"version"=>array("type"=>"string"),
 				"device_id"=>array("type"=>"string"),
@@ -105,9 +100,9 @@ class Logger{
 			}
 			$status->data["events"] = $ids;
 		}
-		if(!empty($param["errors"])){
+		if(!empty($param["logs"])){
 			$ids = array();
-			foreach ($param["errors"] as $key => $value) {
+			foreach ($param["logs"] as $key => $value) {
 				$value["sno"] = $sno;
 				$value["sno"] = $sno;
 				$value["version"] = $ver;
@@ -123,7 +118,7 @@ class Logger{
 					$ids[] = $event_id;
 				}
 			}
-			$status->data["errors"] = $ids;
+			$status->data["logs"] = $ids;
 		}
 		return $status;
 	}

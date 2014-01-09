@@ -10,6 +10,7 @@ require_once $dir."/BFAcl.php";
 require_once $dir."/Dao.php";
 require_once $dir."/status.php";
 require_once $dir."/validator.php";
+require_once $dir."/HttpRequestHandler.php";
 class ApplicationConfig{
 	public function getContextConfig(){
 		return null;

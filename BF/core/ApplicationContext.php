@@ -43,13 +43,17 @@ class ApplicationContext{
 		//check param
 		$paramAction = $action."Param";
 		$fields = $obj->$paramAction();
-		$validator = new Validator($fields);
-		$param = $validator->check();
-		if(!$param->isSuccess()){
-			echo json_encode($param);
-			return;
+		$param  = void;
+		if (!empty($fields)) {
+			$validator = new Validator($fields);
+			$param = $validator->check();
+			if(!$param->isSuccess()){
+				echo json_encode($param);
+				return;
+			}
+			$param = $param->data;
 		}
-		$param = $param->data;
+		
 		//执行action
 		$data = $obj->$action($param);
 		if($route->result->type == "json"){
