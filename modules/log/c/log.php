@@ -74,6 +74,10 @@ class LoggerHandler extends bf\core\HttpRequestHandler{
 			}
 			$device = $deviceParam->data;
 			$device["sno"] = $sno;
+		}else{//更新
+			$sno = $device["sno"];
+			$p = $deviceParam->data;
+			$ret = $this->model->updateDevice($p,array("sno"=>$sno));
 		}
 		$sno = $device["sno"];
 		$ver = $deviceParam->data["version"];

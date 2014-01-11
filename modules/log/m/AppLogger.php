@@ -12,6 +12,10 @@ class AppLogger extends bf\core\Dao{
 		$ret = $this->insert(TABLE_DEVICE, $param);
 		return $ret;
 	}
+	function updateDevice($param,$cond){
+		$ret = $this->update(TABLE_DEVICE, $param, $cond);
+		return $ret;
+	}
 	function addEventLog($param){
 		$ret = $this->insert(TABLE_EVENT, $param);
 		return $ret;

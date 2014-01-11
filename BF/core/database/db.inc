@@ -124,14 +124,15 @@ class DB{
 
 	public function update($table, $param, $conditions){
 		$this->last_error = null;
-		$_db = db_update($table);
-		$this->setCondition($_db, $conditions);
-		$param = $this->checkParam($param);
-		$_db->fields($param);
 		$ret = false;
 		try {
+			$_db = db_update($table);
+			$this->setCondition($_db, $conditions);
+			$param = $this->checkParam($param);
+			$_db->fields($param);
 			$ret = $_db->execute();
 		} catch (Exception $e) {
+			print $e;
 			$this->last_error = $e;
 		}
 		return $ret;
