@@ -42,7 +42,7 @@ class ApplicationContext{
 		//check param
 		$paramAction = $action."Param";
 		$fields = $obj->$paramAction();
-		$param  = void;
+		$param  = null;
 		if (!empty($fields)) {
 			$validator = new Validator($fields);
 			$param = $validator->check();

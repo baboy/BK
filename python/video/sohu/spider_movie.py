@@ -10,6 +10,8 @@ class SohuVideoParser( ):
 	def __init__(self):
 		self.links = []
 		self.db = DB.DB()
+		self.db.appid = "BK"
+		self.db.module = "movie"
 
 
 	
@@ -32,6 +34,7 @@ class SohuVideoParser( ):
 				v = video[k2] if k2 in video else None
 				if v:
 					item[k] = v
+			item["node"] = "CONTENT"
 			sid = self.db.addItem(item);
 			if sid > 0:
 				num = num+1
@@ -68,6 +71,7 @@ class SohuVideoParser( ):
 			if v:
 				item[k] = v
 		item["sid"] = sid
+		print item.get("original")
 		vid = self.db.addVideo(item)
 		if vid >0 :
 			print "add video m3u8 vid:",vid,item["reference_id"]

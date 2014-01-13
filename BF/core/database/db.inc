@@ -95,7 +95,15 @@ class DB{
 		$this->last_error = null;
 		$_db = db_select($table, "t");
 		if ($fields) {
-			$_db->fields("t", $fields);
+			//$_db->fields("t", $fields);
+			foreach ($fields as $key => $value) {
+				 if (strpos( $value, " as ") > 0) {
+				 	$a = explode(" as ",$value);
+				 	$_db->addField("t", $a[0], $a[1]);
+				 }else{
+				 	$_db->addField("t", $value);
+				 }
+			}
 		}else{
 			$_db->fields("t");
 		}

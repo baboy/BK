@@ -24,6 +24,13 @@ class BFRouteManager{
 	function getRouteConfig(){
 		return $this->routes;
 	}
+	function parsePath($path){
+		$s = "/api/v1/query/{type}";
+		$re = '/^(?:\/([^\{\}]*))(?:\/(?:\{([a-zA-Z0-9_-]+)\}))+/';
+		$n = preg_match_all($re, $s, $matches);
+		var_dump($matches);
+
+	}
 	/**
 	*	return 获取当前路由
 	*	
@@ -38,6 +45,7 @@ class BFRouteManager{
 		if(!empty($prefix) && startsWith($path, $prefix)){
 			$path = substr($path, strlen($prefix));
 		}
+		//$this->parsePath($path);
 		$routeConf = isset( $this->routes[$path] ) ? $this->routes[$path] : null;
 		if (empty($routeConf)) {
 			return false;

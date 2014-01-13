@@ -1,0 +1,82 @@
+电影
+http://api.tv.sohu.com/v4/search/channel/sub.json?subId=22&poid=1&plat=3&api_key=695fe827ffeb7d74260a813025970bd5&sver=3.5&partner=1&cate_code=100&column_id=58&column_type=4&page=1&page_size=30&act=1
+detail
+http://api.tv.sohu.com/v4/video/info/1384677.json?site=1&api_key=695fe827ffeb7d74260a813025970bd5&plat=3&partner=1&sver=3.5&poid=1&
+http://api.tv.sohu.com/v4/album/videos/6101606.json?page_size=30&api_key=695fe827ffeb7d74260a813025970bd5&plat=3&partner=1&sver=3.5&poid=1&page=1
+
+
+电视剧
+http://api.tv.sohu.com/v4/search/channel.json?api_key=695fe827ffeb7d74260a813025970bd5&plat=3&sver=3.5&partner=1&cid=2&page=1&page_size=30
+detail:
+http://api.tv.sohu.com/v4/album/info/6089917.json?api_key=695fe827ffeb7d74260a813025970bd5&plat=3&partner=1&sver=3.5&poid=1
+aid
+http://api.tv.sohu.com/v4/album/videos/6089917.json?page_size=50&api_key=695fe827ffeb7d74260a813025970bd5&plat=3&partner=1&sver=3.5&poid=1&page=1
+
+iBox-Vod
+
+config:
+{
+	"status":1,
+	"msg":"OK",
+	"data":{
+		"modules":[
+
+		]
+	}
+}
+array(
+	"status"=>1,
+	"msg"=>"OK",
+	"data"=>array(
+		"modules"=>array(
+			array(
+				"position"=>"0,0,0.2286,1",
+				"title"=>"电视剧",
+				"icon"=>"",
+				"pic"=>"",
+				"api"=>"",
+				"filter"=>""
+			),
+			array(
+				"position"=>"0.2286,0,0.3857,0.5",
+				"title"=>"电影",
+				"icon"=>"",
+				"pic"=>"",
+				"api"=>"",
+				"filter"=>""
+			),
+			array(
+				"position"=>"0.6143,0,0.3857,0.5",
+				"title"=>"综艺",
+				"icon"=>"",
+				"pic"=>"",
+				"api"=>"",
+				"filter"=>""
+			),
+			array(
+				"position"=>"0.2286,0.5,0.3,0.5",
+				"title"=>"王牌栏目",
+				"icon"=>"",
+				"pic"=>"",
+				"api"=>"",
+				"filter"=>""
+			),
+			array(
+				"position"=>"0.5286,0.5,0.2357,0.5",
+				"title"=>"明星",
+				"icon"=>"",
+				"pic"=>"",
+				"api"=>"",
+				"filter"=>""
+			),
+			array(
+				"position"=>"0.7643,0.5,0.2357,0.5",
+				"title"=>"互动",
+				"icon"=>"",
+				"pic"=>"",
+				"api"=>"",
+				"filter"=>""
+			)
+		)
+	)
+)

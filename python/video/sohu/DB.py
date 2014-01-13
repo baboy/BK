@@ -2,9 +2,9 @@ from constants import DBConstant
 import MySQLdb
 
 
-SQL_INSERT = "INSERT INTO wp_media (appid,module,title,actors,thumbnail,pic,reference_id,director,pubdate,area,duration,score,type) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+SQL_INSERT = "INSERT INTO wp_media (appid,module,node,title,content,actors,thumbnail,pic,thumbnail_hor,pic_hor,reference_id,director,pubdate,area,duration,score,type) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 SQL_UPDATE_CONTENT = "UPDATE wp_media set content=%s where reference_id=%s"
-SQL_ADD_VIDEO= "insert into wp_media_video(sid,thumbnail,pic,m3u8,sd,high,super,origin,mp4,duration,content, page_url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+SQL_ADD_VIDEO= "insert into wp_media_video(sid,thumbnail,pic,thumbnail_hor,pic_hor,m3u8,sd,high,super,original,mp4,duration,content, page_url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 SQL_QUERY_RSSSOURCE = "SELECT category,source FROM cms_tvie_rss WHERE status='publish' "
 class DB:
@@ -20,14 +20,16 @@ class DB:
 	#@param a:article
 	def addItem(self,a):
 		global SQL_INSERT
-		appid = "BK"
-		module = "video"
-		param = (appid,
-				module,
-				a.get("title"),
+		param = (self.appid,
+				self.module,
+				a.get("node"),
+				a.get("title") if a.get("node")=="CONTENT" else a.get("serial_title"),
+				a.get("content") if a.get("node")=="CONTENT" else a.get("serial_content"),
 				a.get("actors"),
 				a.get("thumbnail"), 
 				a.get("pic"),
+				a.get("thumbnail_hor"), 
+				a.get("pic_hor"),
 				a.get("reference_id"),
 				a.get("director"),
 				a.get("pubdate"),
@@ -44,6 +46,18 @@ class DB:
 			print "add item exception:", e
 			rowid = 0
 		return rowid
+	def addAttr(self,sid,key,val):
+		sql = "insert into wp_media_attr(sid,`key`,`value`) values(%s,%s,%s)"
+		param = (str(sid),key,str(val))
+		rowid = 0
+		try:
+			self.cursor.execute(sql, param)
+			self.conn.commit()
+			rowid = self.cursor.lastrowid
+		except Exception, e:
+			print "add attr error",e
+			rowid = 0
+		return rowid
 	def updateVideoContent(self,reference_id,content):
 		global SQL_UPDATE_CONTENT
 		param = (content, reference_id )
@@ -57,17 +71,20 @@ class DB:
 			rowid = 0
 		return rowid
 	def addVideo(self,a):
-		self.updateVideoContent(a["reference_id"],a["content"])
+		if a.get("content"):
+			self.updateVideoContent(a["reference_id"],a["content"])
 		global SQL_ADD_VIDEO
 		sid = str(a.get("sid"))
 		param = (sid,
 				a.get("thumbnail"),
 				a.get("pic"),
+				a.get("thumbnail_hor"), 
+				a.get("pic_hor"),
 				a.get("sd"),
 				a.get("sd"),
 				a.get("high"), 
 				a.get("super"), 
-				a.get("origin"),
+				a.get("original"),
 				a.get("mp4"),
 				a.get("duration"),
 				a.get("content"),
@@ -79,6 +96,40 @@ class DB:
 			rowid = self.cursor.lastrowid
 		except Exception, e:
 			print "add Video exception:", e,a["sid"]
+			rowid = 0
+		return rowid
+	def addSerialVideo(self,sid,gid,index):
+		sql = "insert into wp_media_serial_video(sid,gid,`index`) values(%s,%s,%s)"
+		param=(str(sid),str(gid),str(index))
+		rowid = 0
+		try:
+			self.cursor.execute(sql, param)
+			self.conn.commit()
+			rowid = self.cursor.lastrowid
+		except Exception, e:
+			print "addSerialVideo Error:", e
+			rowid = 0
+		return rowid
+
+	def addSerial(self,a):
+		sql = "insert into wp_media_serial(title,summary,content,video_update_count,video_total_count,tip,reference_id) values(%s,%s,%s,%s,%s,%s,%s)"
+		param = (
+				a.get("serial_title"),
+				a.get("summary"),
+				a.get("serial_desc"),
+				a.get("video_update_count"),
+				a.get("video_total_count"),
+				a.get("tip"),
+				a.get("reference_id")
+				)
+		rowid = 0
+		try:
+			self.cursor.execute(sql, param)
+			self.conn.commit()
+			rowid = self.cursor.lastrowid
+			
+		except Exception, e:
+			print "add Serial Exception:",e
 			rowid = 0
 		return rowid
 
