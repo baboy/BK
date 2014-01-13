@@ -8,7 +8,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"电视剧",
 						"icon"=>"",
 						"pic"=>"",
-						"api"=>"",
+						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
 						"filter"=>""
 					),
 					array(
@@ -16,7 +16,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"电影",
 						"icon"=>"",
 						"pic"=>"",
-						"api"=>"",
+						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
 						"filter"=>""
 					),
 					array(
@@ -24,7 +24,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"综艺",
 						"icon"=>"",
 						"pic"=>"",
-						"api"=>"",
+						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
 						"filter"=>""
 					),
 					array(
@@ -32,7 +32,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"王牌栏目",
 						"icon"=>"",
 						"pic"=>"",
-						"api"=>"",
+						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
 						"filter"=>""
 					),
 					array(
@@ -40,7 +40,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"明星",
 						"icon"=>"",
 						"pic"=>"",
-						"api"=>"",
+						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
 						"filter"=>""
 					),
 					array(
@@ -48,7 +48,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"互动",
 						"icon"=>"",
 						"pic"=>"",
-						"api"=>"",
+						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
 						"filter"=>""
 					)
 				)
