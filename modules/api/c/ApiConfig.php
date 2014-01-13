@@ -2,9 +2,6 @@
 class ApiConfigHandler extends bf\core\HttpRequestHandler{
 	function config(){
 		$conf = array(
-			"status"=>1,
-			"msg"=>"OK",
-			"data"=>array(
 				"modules"=>array(
 					array(
 						"position"=>"0,0,0.2286,1",
@@ -55,8 +52,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"filter"=>""
 					)
 				)
-			)
-		);
+				);
 		$status = bf\core\Status::status();
 		$status->data = $conf;
 		return $status;
