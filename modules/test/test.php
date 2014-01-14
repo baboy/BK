@@ -7,7 +7,8 @@ class Test{
 	public function test(){
 		//echo "Test->test()";
 
-		$s = "/api/v1/query/{type}/{name}";
+		$s = "/api/v1/{type}/{name}";
+		$path = "/api/v1/query/movie";
 		$re = '/^((?:\/([a-zA-Z0-9-_]+))*)((?:\/(?:\{([a-zA-Z0-9_-]+)\}))*)/';
 
 		$re = "/\{([a-zA-Z0-9-_]*)\}/";
@@ -21,7 +22,7 @@ class Test{
 			}
 		}
 		$re = preg_replace("/\//","\\/",$re);
-		$path = "/api/v1/query/query/movie";
+		$re = "^$re$";
 		$n = preg_match("/$re/", $path, $values);
 		if ($n>0) {
 			unset($values[0]);

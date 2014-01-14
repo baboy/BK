@@ -17,13 +17,19 @@ class Dao extends DB{
 	}
 	function __call($name, $args){
 		$sql = $this->getSql($name);
-		if(!empty($args)){
-			foreach ($args[0] as $key => $value) {
-				$sql = str_replace("{".$key."}", $value, $sql);
+		if (!empty($sql)) {
+			if(!empty($args)){
+				foreach ($args[0] as $key => $value) {
+					$sql = str_replace("{".$key."}", $value, $sql);
+				}
 			}
+			$ret = $this->query($sql);
+			return $ret;
 		}
-		$ret = $this->query($sql);
-		return $ret;
+		return false;
+		//$functionName = "db_$name";
+		//$function = new ReflectionFunction($functionName);
+	 	//return $function->invokeArgs($args);
 	}
 	function execute(){
 	}

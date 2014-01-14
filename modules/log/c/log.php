@@ -4,7 +4,7 @@ class LoggerHandler extends bf\core\HttpRequestHandler{
 	function getModel($modelName){
 		if (empty($this->model)) {
 			require_once dirname(__FILE__)."/../m/$modelName.php";
-			$this->model = $this->db->getModel($modelName);
+			$this->model = new $modelName();
 		}
 		return $this->model;
 	}

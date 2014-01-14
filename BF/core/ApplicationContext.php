@@ -16,7 +16,9 @@ class ApplicationContext{
 		//$this->acl = $appConfig->getAcl();
 		$this->objectManager = new BFObjectManager($config->getContextConfig());
 		$this->objectManager->loadObjects($config->getRouteConfig());
-		$this->db = new Dao($config->getSqlConfig());
+		global $__DB__;
+		$__DB__ = new Dao($config->getSqlConfig());
+		$this->db = $__DB__;
 	}
 	static function getInstance($config){
 		global $_applicationContext;
@@ -32,7 +34,6 @@ class ApplicationContext{
 			header("HTTP/1.0 404 Not Found");
 			exit;
 		}
-
 		$action = $route->action;
 		$class = $route->class;
 		//获取路由代理
@@ -51,6 +52,9 @@ class ApplicationContext{
 				return;
 			}
 			$param = $param->data;
+		}
+		if (empty($param)) {
+			$param = $_GET;
 		}
 		
 		//执行action

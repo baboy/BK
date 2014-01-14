@@ -2,8 +2,12 @@
 class ApiConfigHandler extends bf\core\HttpRequestHandler{
 	function config(){
 		$conf = array(
+
+				"related_api"=>"http://bf.cn/api/v1/recent/movie/",
+				"background"=>"http://app.tvie.com.cn/static/images/background.png",
 				"modules"=>array(
 					array(
+						"id"=>"serial",
 						"position"=>"0,0,0.2286,1",
 						"title"=>"电视剧",
 						"icon"=>"",
@@ -12,6 +16,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"filter"=>""
 					),
 					array(
+						"id"=>"movie",
 						"position"=>"0.2286,0,0.3857,0.5",
 						"title"=>"电影",
 						"icon"=>"",
@@ -20,6 +25,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"filter"=>""
 					),
 					array(
+						"id"=>"zongyi",
 						"position"=>"0.6143,0,0.3857,0.5",
 						"title"=>"综艺",
 						"icon"=>"",
@@ -28,6 +34,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"filter"=>""
 					),
 					array(
+						"id"=>"lanmu",
 						"position"=>"0.2286,0.5,0.3,0.5",
 						"title"=>"王牌栏目",
 						"icon"=>"",
@@ -36,6 +43,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"filter"=>""
 					),
 					array(
+						"id"=>"star",
 						"position"=>"0.5286,0.5,0.2357,0.5",
 						"title"=>"明星",
 						"icon"=>"",
@@ -44,6 +52,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"filter"=>""
 					),
 					array(
+						"id"=>"hudong",
 						"position"=>"0.7643,0.5,0.2357,0.5",
 						"title"=>"互动",
 						"icon"=>"",
