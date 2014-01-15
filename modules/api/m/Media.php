@@ -13,7 +13,19 @@ class Media extends bf\core\Model{
 		return $medias;
 	}
 	function queryDetail($sid){
+		/*
 		$sql = "SELECT m.id as sid, m.title, m.content,m.tip,m.tag,m.thumbnail,m.pic,m.score,m.views,m.actors,m.director,m.area,m.pubdate, v.sd, v.high, v.super, v.original, v.mp4 FROM wp_media m left join wp_media_video v on m.id = v.sid WHERE m.id='%s'";
+		$sql = sprintf($sql,addslashes($sid));
+		$medias = $this->db->query($sql);
+		return empty($medias)?null:$medias[0];
+		*/
+		$sql = "SELECT t.id as sid, t.title, t.content,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate, v.sd, v.high, v.super, v.original, v.mp4 FROM wp_media t, wp_media_video v WHERE t.id=v.sid AND t.id=%s ";
+		$sql = "SELECT m.*, "
+			. "attr.value as video_total_count, "
+			. "attr2.value as video_update_count "
+			. "FROM ($sql) m "
+			. "left join wp_media_attr attr on m.sid=attr.sid and attr.`key`='video_total_count' "
+			. "left join wp_media_attr attr2 on m.sid=attr.sid and attr2.`key`='video_update_count'";
 		$sql = sprintf($sql,addslashes($sid));
 		$medias = $this->db->query($sql);
 		return empty($medias)?null:$medias[0];
