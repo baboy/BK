@@ -14,7 +14,6 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 	function queryParam(){
 		$fields = array(
 				"module"=>array("type"=>"string"),
-				"node"=>array("type"=>"string","default"=>"CONTENT"),
 				"offset"=>array("type"=>"int","default"=>0),
 				"count"=>array("type"=>"int","default"=>30),
 			);
@@ -38,16 +37,18 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 		$status->data = $data;
 		return $status;
 	}
+
 	function recentParam(){
 		$fields = array(
 				"sid"=>array("type"=>"string","option"=>true),
+				"count"=>array("type"=>"int","option"=>true, "default"=>20),
 				"module"=>array("type"=>"string")
 			);
 		return $fields;
 
 	}
 	function recent($param){
-		$data = $this->model->queryRecent($param["module"], empty($param["sid"]) ? null:$param["sid"]);
+		$data = $this->model->queryRecent($param["module"], empty($param["sid"]) ? null:$param["sid"],$param["count"]);
 		$status = bf\core\Status::status();
 		$status->data = $data;
 		return $status;

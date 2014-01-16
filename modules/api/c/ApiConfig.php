@@ -3,7 +3,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 	function config(){
 		$conf = array(
 
-				"related_api"=>"http://bf.cn/api/v1/recent/movie/",
+				"related_api"=>"http://app.tvie.com.cn/api/v1/recent/movie/",
 				"background"=>"http://app.tvie.com.cn/static/images/background.png",
 				"modules"=>array(
 					array(

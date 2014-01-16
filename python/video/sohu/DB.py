@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#coding=utf-8
 from constants import DBConstant
 import MySQLdb
 
@@ -132,10 +134,22 @@ class DB:
 			print "add Serial Exception:",e
 			rowid = 0
 		return rowid
-
+	def getTypeId(self,name):
+		sql = "select id from wp_media_type where name='"+name+"'"
+		param = tuple(name)
+		param = None
+		ret = None
+		try:
+			ret = self.cursor.execute(sql, param)
+			self.conn.commit()
+			
+		except Exception, e:
+			print "add Serial Exception:",e
+			ret = None
+		return ret
 
 	def close(self):
 		self.cursor.close()
 		self.conn.close()
 
-	
+

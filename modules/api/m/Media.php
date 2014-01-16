@@ -7,10 +7,37 @@ class Media extends bf\core\Model{
 		$count = empty($param["count"])?20:intval($param["count"]);
 		unset($param["offset"]);
 		unset($param["count"]);
+		/*
 		$fields = array("id as sid","title","tip","tag","thumbnail","pic","duration","score","views","actors","director","area","pubdate");
 		
 		$medias = $this->db->select("media",$fields,$param,array($offset,$count));
 		return $medias;
+		*/
+		$where = null;
+		foreach ($param as $key => $value) {
+			if (empty($where)) {
+				$where = " WHERE ";
+			}else{
+				$where .= " AND ";
+			}
+			if ($key == "exclude") {
+				$sids = explode(",", $value);
+				foreach ($sids as $i => $sid) {
+					$where .= " t.id!=$sid ";
+				}
+				continue;
+			}
+			$where .= " t.$key='$value' ";
+		}
+		$sql = "SELECT t.id as sid, t.title,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate FROM wp_media t $where order by id desc LIMIT $offset, $count";
+		$sql = "SELECT m.*, "
+			. "attr.value as video_total_count, "
+			. "attr2.value as video_update_count "
+			. "FROM ($sql) m "
+			. "left join wp_media_attr attr on m.sid=attr.sid and attr.`key`='video_total_count' "
+			. "left join wp_media_attr attr2 on m.sid=attr.sid and attr2.`key`='video_update_count'";
+		$medias = $this->db->query($sql);
+		return $medias ? $medias : null;
 	}
 	function queryDetail($sid){
 		/*
@@ -30,17 +57,11 @@ class Media extends bf\core\Model{
 		$medias = $this->db->query($sql);
 		return empty($medias)?null:$medias[0];
 	}
-	function queryRecent($module,$sid){
-		$param = array(array("module", $module));
+	function queryRecent($module,$sid,$count){
+		$param = array("module"=>$module,"count"=>$count);
 		if(!empty($sid))
-			$param[] = array("id",$sid,"!=");
-		
-		$offset = empty($param["offset"])?0:intval($param["offset"]);
-		$count = empty($param["count"])?20:intval($param["count"]);
-		unset($param["offset"]);
-		unset($param["count"]);
-		$fields = array("id as sid","title","tip","tag","thumbnail","pic","duration","score","views","actors","director","area","pubdate");
-		$medias = $this->db->select("media",$fields,$param,array($offset,$count));
+			$param["exclude"] = $sid;
+		$medias = $this->query($param);
 		return $medias;
 	}
 }
