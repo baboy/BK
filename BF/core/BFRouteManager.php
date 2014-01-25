@@ -96,7 +96,7 @@ class BFRoute{
 			$keys = $keys[1];
 			$re = $this->path;
 			for ($i=0,$n = count($placeholders); $i < $n; $i++) { 
-				$re = str_replace($placeholders[$i], "([a-zA-Z0-9-_]*)", $re);
+				$re = str_replace($placeholders[$i], "([a-zA-Z0-9-_]+)", $re);
 			}
 		}else{
 			return false;

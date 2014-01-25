@@ -34,6 +34,11 @@ class ApplicationContext{
 			header("HTTP/1.0 404 Not Found");
 			exit;
 		}
+		//
+		$status = $this->doAction($route);
+		$this->doOutput($route, $status);
+	}
+	function doAction($route){
 		$action = $route->action;
 		$class = $route->class;
 		//获取路由代理
@@ -53,22 +58,31 @@ class ApplicationContext{
 			}
 			$param = $param->data;
 		}
-		if (empty($param)) {
+		if (empty($param) && empty($fields)) {
 			$param = $_GET;
 		}
-		
 		//执行action
 		$status = $obj->$action($param);
-		if($route->result->type == "json"){
-			if(!empty($status))
-				echo json_encode($status);
-		}else{
-			extract($GLOBALS);
-			if(!empty($status)){
-				extract(array("data"=>$status->data));
-			}
-			include WEB_ROOT_DIR."/tpl/".$route->result->view;
-
+		return $status;
+	}
+	function doOutput($route, $status){
+		extract($GLOBALS);
+		if(!empty($status) && !empty($status->data)){
+			extract(array("data"=>$status->data));
 		}
+		$type = $route->result->type;
+		if(empty($type) || $type == "html"){
+			include WEB_ROOT_DIR."/tpl/".$route->result->view;
+			return;
+		}
+		if ($type=="html-json") {
+			ob_start();
+			include WEB_ROOT_DIR."/tpl/".$route->result->view;
+			$status->data = ob_get_contents();
+			ob_end_clean();
+		}
+
+		if(!empty($status))
+			echo json_encode($status);
 	}
 }

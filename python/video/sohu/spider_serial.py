@@ -62,9 +62,9 @@ class SohuVideoParser( ):
 			gid = self.db.addItem(videoInfo)
 			if gid < 1:
 				continue
-			attr_id = self.db.addAttr(gid,"video_total_count", videoInfo["video_total_count"])
-			attr_id2 = self.db.addAttr(gid,"video_update_count", videoInfo["video_update_count"])
-			print "gid", gid,attr_id,attr_id2
+			#attr_id = self.db.addAttr(gid,"video_total_count", videoInfo["video_total_count"])
+			#attr_id2 = self.db.addAttr(gid,"video_update_count", videoInfo["video_update_count"])
+			#print "gid", gid,attr_id,attr_id2
 			serials = self.download_video(aid)
 			for i in range(0,len(serials)):
 				v = item
@@ -83,7 +83,7 @@ class SohuVideoParser( ):
 			num = num+1
 
 		if num > 0:
-			self.download_page(page +1)
+			self.download_page(page -1)
 		else:
 			print "quit loop"
 			

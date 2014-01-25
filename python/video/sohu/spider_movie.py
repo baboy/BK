@@ -1,4 +1,5 @@
- # -*- coding:utf-8 -*-
+#!/usr/bin/env python
+#coding=utf-8
 import urllib2, sys
 import json
 import dateutil.parser
@@ -43,7 +44,7 @@ class SohuVideoParser( ):
 			else:
 				print "add video error:",item["vid"],item["reference_id"],item["title"]
 		if num > 0:
-			self.download_page(page +1)
+			self.download_page(page -1)
 		else:
 			print "quit loop"
 			

@@ -5,28 +5,42 @@
 		<meta name="keywords" content="baboy, cms, php, BK framework, php framework">
 		<meta name="description" content="cms adminitrator">
 		<meta name="author" content="Baboy">
-		<title><?php echo $title;?></title>
+		<title>AppMan</title>
 		<script src="<?=$relatvie_path?>/static/js/jquery.js"></script>
-		<script src="<?=$relatvie_path?>/static/js/app.package.js"></script>
+		<script src="<?=$relatvie_path?>/static/js/jquery.form.js"></script>
+		<script src="<?=$relatvie_path?>/static/js/app.package.js?<?rand()?>"></script>
 		<style>
 			html,body{
 				padding:0;
 				margin: 0;
+				background:#EEE;
+				height:100%;
+				font-size:14px;
+			}
+			#container{
+				width:1024px;
+				margin: 0 auto 0;
+				height:100%;
+			}
+			#main{
+				border:1px solid #CCC;
+				background: white;
+				height:100%;
 			}
 			.site-title{
 				font-weight: 900;
 				font-size: 28px;
+				line-height: 100px;
 			}
 			header{
-				border-bottom:1px solid #ccc;
-				height:120px;
-				line-height: 120px;
+				height1:120px;
+				line-height1: 120px;
 				text-align: center;
 			}
 			menu{
 				float:left;
 				width:200px;
-				height:1000px;
+				height:100%;
 				padding: 0;
 				margin: 0;
 				border-right:1px solid #ccc;
@@ -59,6 +73,38 @@
 			}
 			.content-wrapper{
 				margin-left:200px;
+				background: #DDD;
+			}
+			.notice-board-wrapper{
+			    text-align:center;
+			    position:absolute;
+			    width:80%;
+			    top:-1px;
+			}
+			#notice-board{
+			    background:#FFF1A8;
+			    font-weight:900;
+			    font-size:12px;
+			    color:black;
+			    width:120px;
+			    padding:3px 5px;
+			    text-align:center;
+			    display:none;
+			    margin-left:auto;
+			    margin-right:auto;
+
+			    border-color:#ccc;
+			    border-width:1px;
+			    border-style:solid;
+			    border-radius:6px;
+			    -webkit-border-radius:6px;
+			    -moz-border-radius:6px;
+			    border-top-left-radius: 0;
+			    border-top-right-radius: 0;
+			    -moz-border-radius-topleft: 0;
+			    -moz-border-radius-topright: 0;
+			    -webkit-border-top-left-radius: 0;
+			    -webkit-border-top-right-radius: 0;
 			}
 		</style>
 		<style>
@@ -66,17 +112,31 @@
 				height:40px;
 				line-height: 40px;
 				border-bottom: 1px solid #ccc;
-				background: #fefefe;
+				background1: #fefefe;
 			}
 			.nh-top .nh-back{
 				float:left;
 				height:100%;
+				color:blue;
+				margin-right:20px;
+				cursor:pointer;
 			}
 			.nh-top .nh-title{
 				height:100%;
 				text-align: left;
 				padding-left: 10px;
-				vertical-align: middle;;
+				vertical-align: middle;
+			}
+			.nh-top .nh-title-item-right{
+				float:right;
+				vertical-align: middle;
+				margin:5px 20px;
+
+			}
+			.nh-top .nh-title-item-right button{
+				height:30px;
+			}
+			.nh-push-view{
 			}
 		</style>
 		<style>
@@ -129,35 +189,61 @@
 			}
 
 		</style>
+		<style>
+			.div-input{
+				padding: 10px 20px 10px;
+			}
+			.div-input label{
+				display:block;
+				float:left;
+				width:150px;
+				font: 80%;
+				color:#555;
+			}
+			.div-submit{
+				padding:10px  0  10px 150px;
+			}
+		</style>
 		<script>
 			window.onload = function(){
-				var obj = document.createElement("div");
+				var addBtn = document.createElement("button");
+				addBtn.innerHTML = "Add";
+				var appDiv = document.createElement("div");
 				var nav = new NavigationHandler("app-content");
-				nav.push(obj);
-				obj.setTitle("title");
+				nav.push(appDiv);
+				appDiv.setTitle("App Management");
+				appDiv.setRightItem(addBtn);
 
-				var app = new AppHandler(obj);
-				app.query();
+				var app = new AppHandler(appDiv);
+				app.showProducts();
+				addBtn.onclick = function(){
+					app.toggleAddForm();
+				}
 			}
 		</script>
 	</head>
 	<body>
-		<header>
-			<div class="site-title">BK Simple Framework</div>
-		</header>
-		<menu>
-			<ul class="menu-item">
-				<li class="title">App Man<li>
-				<li>
-					<ul>
-						<li>App</li>
+		<div id="container">
+			<header>
+				<div class="notice-board-wrapper"><div id="notice-board">正在加载...</div></div>
+				<div class="site-title">BK Simple Framework</div>
+			</header>
+			<div id="main">
+				<menu>
+					<ul class="menu-item">
+						<li class="title">App Man</li>
+						<li>
+							<ul>
+								<li>App</li>
+							</ul>
+						</li>
 					</ul>
-				</li>
-			</ul>
-		</menu>
-		<div class="content-wrapper" id="content-wrapper">
-			<div class="app-desc"></div>
-			<div class="app-content" id="app-content"></div>
+				</menu>
+				<div class="content-wrapper" id="content-wrapper">
+					<div class="app-desc"></div>
+					<div class="app-content" id="app-content"></div>
+				</div>
+			</div>
 		</div>
 
 	</body>

@@ -16,6 +16,7 @@ class AppHandler extends bf\core\HttpRequestHandler{
 				"package"		=>array("type"=>"string"),
 				"developer"		=>array("type"=>"string", "option"=>true),
 				"description"	=>array("type"=>"string", "option"=>true),
+				"update_time"	=>array("type"=>"string","default"=>date("Y-m-d H:i:s"))
 			);
 		return $fields;
 	}
@@ -40,6 +41,24 @@ class AppHandler extends bf\core\HttpRequestHandler{
 		}
 		$status = bf\core\Status::status();
 		$status->data = $data;
+		return $status;
+	}
+	function queryBuildsParam(){
+		$fields = array(
+				"id"=>array("type"=>"int","option"=>true),
+				"package"=>array("type"=>"string","option"=>true)
+			);
+		return $fields;
+	}
+	function queryBuilds($param){
+		if ( empty($param) ) {
+			return bf\core\Status::errorParam();
+		}
+		$builds = $this->model->queryAppBuilds($param);
+		$status = bf\core\Status::status();
+		$app = $this->model->queryApp( $param );
+		$app->list = $builds;
+		$status->data = $app;
 		return $status;
 	}
 	function addBuildParam(){

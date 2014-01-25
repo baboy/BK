@@ -20,6 +20,9 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 		return $fields;
 	}
 	function query($param){
+		if ($param["module"] == "serial") {
+			$param["node"] = "SERIAL";
+		}
 		$data = $this->model->query($param);
 		$status = bf\core\Status::status();
 		$status->data = $data;
@@ -27,14 +30,18 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 	}
 	function detailParam(){
 		$fields = array(
-				"sid"=>array("type"=>"string")
+				"sid"=>array("type"=>"string"),
+				"module"=>array("type"=>"string"),
 			);
 		return $fields;
 	}
 	function detail($param){
-		$data = $this->model->queryDetail($param["sid"]);
+		$action = "query".ucfirst(strtolower($param["module"]))."Detail";
+		$data = $this->model->$action($param["sid"]);
 		$status = bf\core\Status::status();
 		$status->data = $data;
+		$status->param = $param;
+		$status->action = $action;
 		return $status;
 	}
 

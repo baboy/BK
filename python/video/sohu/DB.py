@@ -2,9 +2,14 @@
 #coding=utf-8
 from constants import DBConstant
 import MySQLdb
+import re
+
+import sys 
+reload(sys) 
+sys.setdefaultencoding('utf-8')
 
 
-SQL_INSERT = "INSERT INTO wp_media (appid,module,node,title,content,actors,thumbnail,pic,thumbnail_hor,pic_hor,reference_id,director,pubdate,area,duration,score,type) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+SQL_INSERT = "INSERT INTO wp_media (appid,module,node,title,content,actors,thumbnail,pic,thumbnail_hor,pic_hor,reference_id,director,pubdate,area,duration,score,type,type_name,total_count,update_count) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 SQL_UPDATE_CONTENT = "UPDATE wp_media set content=%s where reference_id=%s"
 SQL_ADD_VIDEO= "insert into wp_media_video(sid,thumbnail,pic,thumbnail_hor,pic_hor,m3u8,sd,high,super,original,mp4,duration,content, page_url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
@@ -22,6 +27,8 @@ class DB:
 	#@param a:article
 	def addItem(self,a):
 		global SQL_INSERT
+		t = self.getType("type", a.get("type","其它"))
+		area_id = self.getType("area", a.get("area","其它"))
 		param = (self.appid,
 				self.module,
 				a.get("node"),
@@ -35,10 +42,13 @@ class DB:
 				a.get("reference_id"),
 				a.get("director"),
 				a.get("pubdate"),
-				a.get("area"),
+				str(area_id),
 				a.get("duration"),
 				a.get("score"),
-				a.get("type"))
+				str(t),
+				a.get("type"),
+				str(a.get("total_count")),
+				str(a.get("update_count")))
 		rowid = 0
 		try:
 			self.cursor.execute(SQL_INSERT, param)
@@ -134,22 +144,53 @@ class DB:
 			print "add Serial Exception:",e
 			rowid = 0
 		return rowid
-	def getTypeId(self,name):
-		sql = "select id from wp_media_type where name='"+name+"'"
-		param = tuple(name)
-		param = None
+	def getTypeId(self,key,value):
+		value = value.encode('utf-8')
+		value = value.strip()
+		r1 = re.compile("片$")
+		r2 = re.compile("剧$")
+		if key == "type":
+			value = re.sub(r2,"",value)
+		if key == "area" and  value=="内地剧":
+			value = re.sub(r2,"",value)
+		value = re.sub(r1,"",value)
+		if value == "其他":
+			value = "其它"
+		sql = "select `index` from wp_media_list where gid=%s AND `key`=%s AND value=%s limit 0,1"
+		param = (self.module, key, value)
 		ret = None
 		try:
-			ret = self.cursor.execute(sql, param)
+			count = self.cursor.execute(sql, param)
+			if count > 0:
+				result = self.cursor.fetchone(); 
+				ret = result[0]
 			self.conn.commit()
 			
 		except Exception, e:
 			print "add Serial Exception:",e
 			ret = None
 		return ret
+	def getType(self,key,types):
+		if types:
+			a = types.split(";")
+		t = 0
+		for i in range(0, len(a) ):
+			type_name = a[i]
+			tid = self.getTypeId(key, type_name)
+			if tid is None:
+				print key,types,"select ", type_name, "error"
+			else:
+				t |= (1<<(tid-1))
+		return t
+
 
 	def close(self):
 		self.cursor.close()
 		self.conn.close()
 
+#db = DB()
+#db.module = "movie"
+#types = "战争片;剧情片;传记片;历史片"
+#t = db.getType(types)
+#print t
 

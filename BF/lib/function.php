@@ -153,4 +153,7 @@
 		}
 		return $dec;
 	}
+	function _s($s){
+		return isset($s)?($s==null?"":$s):"";
+	}
 ?>
