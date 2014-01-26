@@ -2,6 +2,9 @@
 define('MEDIA', '');
 
 class Media extends bf\core\Model{
+	/**
+	*	检索资源列表 只检索wp_media 表
+	*/
 	function query($param){
 		$offset = empty($param["offset"])?0:intval($param["offset"]);
 		$count = empty($param["count"])?20:intval($param["count"]);
@@ -23,53 +26,47 @@ class Media extends bf\core\Model{
 			if ($key == "exclude") {
 				$sids = explode(",", $value);
 				foreach ($sids as $i => $sid) {
-					$where .= " t.id!=$sid ";
+					$where .= " t.id!=".addslashes($sid);
 				}
 				continue;
 			}
-			$where .= " t.$key='$value' ";
+			$where .= sprintf(" t.%s='%s' ",$key,addslashes($value));
 		}
 		$sql = "SELECT t.id as sid,t.author,t.summary, t.title,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t $where order by id desc LIMIT $offset, $count";
-		/*
-		$sql = "SELECT m.*, "
-			. "attr.value as video_total_count, "
-			. "attr2.value as video_update_count "
-			. "FROM ($sql) m "
-			. "left join wp_media_attr attr on m.sid=attr.sid and attr.`key`='video_total_count' "
-			. "left join wp_media_attr attr2 on m.sid=attr.sid and attr2.`key`='video_update_count'";
-		*/
 		$medias = $this->db->query($sql);
 		return $medias ? $medias : null;
 	}
 	function querySerialVideos($gid){
 		$gid = addslashes($gid);
-		$sql = "SELECT t.id as sid, t.title, t.content,t.thumbnail,t.pic,t.pubdate,s.`index` FROM wp_media t, wp_media_serial_video s WHERE s.sid=t.id AND s.gid=$gid";
+		$sql = "SELECT t.id as sid, t.title,t.thumbnail,t.pic,t.pubdate,s.`index` FROM wp_media t, wp_media_serial_video s WHERE s.sid=t.id AND s.gid=$gid";
 		$sql = "SELECT m.*, v.content, v.sd, v.high, v.super, v.original, v.mp4 FROM ($sql) m,  wp_media_video v WHERE  v.sid=m.sid";
-		//return $sql;
+		//echo $sql;
+
 		$videos = $this->db->query($sql);
 		return $videos;
 	}
-	function queryVideoDetail($sid){
-		/*
-		$sql = "SELECT m.id as sid, m.title, m.content,m.tip,m.tag,m.thumbnail,m.pic,m.score,m.views,m.actors,m.director,m.area,m.pubdate, v.sd, v.high, v.super, v.original, v.mp4 FROM wp_media m left join wp_media_video v on m.id = v.sid WHERE m.id='%s'";
-		$sql = sprintf($sql,addslashes($sid));
-		$medias = $this->db->query($sql);
-		return empty($medias)?null:$medias[0];
-		*/
-		$sql = "SELECT t.module, t.id as sid, t.title,t.summary,t.author, t.content,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t WHERE t.id=%s ";
+	/**
+	*	检索资源详情
+	*	
+	*/
+	function queryMovieDetail($sid){
+		$sql = "SELECT t.module, t.id as sid, t.title,t.summary,t.author, t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t WHERE t.id=%s ";
 		
-		$sql = "SELECT m.*, v.sd, v.high, v.super, v.original, v.mp4 "
+		$sql = "SELECT m.*,v.content, v.sd, v.high, v.super, v.original, v.mp4 "
 			. "FROM ($sql) m "
 			. "left join wp_media_video v on m.sid=v.sid";
 		
 		$sql = sprintf($sql,addslashes($sid));
 		$medias = $this->db->query($sql);
 		$media = empty($medias)?null:$medias[0];
+		if (empty($media)) {
+			return null;
+		}
 		$attachements = new stdClass();
-		if (!empty($media) && $media->total_count > 1) {
+		if ( $media->module == "serial") {
 			$videos = $this->querySerialVideos($sid);
 			$attachements->videos = $videos;
-		}else if(!empty($media)){
+		}else {
 			$video = new stdClass();
 			foreach(array("title","thumbnail","pic","sd","high","super","original","mp4") as $i=>$k){
 				if (!empty($media->$k)) {
@@ -151,8 +148,8 @@ class Media extends bf\core\Model{
 		$medias = $this->db->query($sql);
 		return empty($medias)?null:$medias[0];
 		*/
-		$sql = "SELECT t.module, t.id as sid, t.title,t.summary,t.author, t.content,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t WHERE t.id=%s ";
-		//$sql = "SELECT t.module, t.id as sid, t.title,t.content,t.author,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t WHERE t.id=%s ";
+		$sql = "SELECT t.module, t.id as sid, t.title,t.summary,t.author,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t WHERE t.id=%s ";
+		$sql = "SELECT m.*,c.content FROM ($sql) m LEFT JOIN wp_media_content c ON m.sid=c.sid";
 
 		/*
 		$sql = "SELECT m.*, v.sd, v.high, v.super, v.original, v.mp4 "
@@ -162,7 +159,9 @@ class Media extends bf\core\Model{
 		$sql = sprintf($sql,addslashes($sid));
 		$medias = $this->db->query($sql);
 		$media = empty($medias)?null:$medias[0];
-
+		if (empty($media)) {
+			return null;
+		}
 		$html = $media->content;
 		$images = $this->parseImages($html);
 		foreach ($images as $key => &$item) {
@@ -171,8 +170,12 @@ class Media extends bf\core\Model{
 		}
 		$media->content = $html;
 		$attachments = array();
-		$attachements["images"] = $images;
-		$media->attachements = $attachements;
+		if (!empty($images)) {
+			$attachements["images"] = $images;
+		}
+		if (!empty($attachements)) {
+			$media->attachements = $attachements;
+		}
 		/*
 		if (!empty($media) && $media->total_count > 1) {
 			$videos = $this->querySerialVideos($sid);
@@ -197,5 +200,17 @@ class Media extends bf\core\Model{
 			$param["exclude"] = $sid;
 		$medias = $this->query($param);
 		return $medias;
+	}
+	function queryRecommend(){
+		$modules = array(
+				array("title"=>"电影","module"=>"movie", "param"=>array("module"=>"movie","node"=>"CONTENT","count"=>10)),
+				array("title"=>"电视剧","module"=>"serial", "param"=>array("module"=>"serial","node"=>"SERIAL","count"=>10)),
+				array("title"=>"新闻","module"=>"news", "param"=>array("module"=>"news","node"=>"CONTENT","count"=>10)),
+			);
+		foreach ($modules as $key => &$module) {
+			$module["data"] = $this->query($module["param"]);
+			unset($module["param"]);
+		}
+		return $modules;
 	}
 }

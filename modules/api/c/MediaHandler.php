@@ -60,4 +60,10 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 		$status->data = $data;
 		return $status;
 	}
+	function queryRecommend($param){
+		$data = $this->model->queryRecommend();
+		$status = bf\core\Status::status();
+		$status->data = $data;
+		return $status;
+	}
 }

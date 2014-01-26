@@ -45,6 +45,9 @@ class BFRouteManager{
 		if(!empty($prefix) && startsWith($path, $prefix)){
 			$path = substr($path, strlen($prefix));
 		}
+		if (!endsWith($path,"/")) {
+			$path .= "/";
+		}
 		//$this->parsePath($path);
 		$route = isset( $this->routes[$path] ) ? $this->routes[$path] : null;
 		if (!empty($route)) {

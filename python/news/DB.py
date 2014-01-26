@@ -26,7 +26,7 @@ class DB:
 		#self.conn.close()
 	#@param a:article
 	def addItem(self,a):
-		sql = "INSERT INTO wp_media (appid,module,node,title,summary,content,author,type,pubdate,update_date,page_url) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+		sql = "INSERT INTO wp_media (appid,module,node,title,summary,content,author,type,pubdate,update_date,reference_id,page_url) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 		param = (self.appid,
 				self.module,
 				a.get("node"),
@@ -37,6 +37,7 @@ class DB:
 				a.get("type"), 
 				a.get("pubdate"), 
 				a.get("pubdate"), 
+				a.get("reference_id"), 
 				a.get("page_url"))
 		rowid = 0
 		try:
@@ -44,7 +45,7 @@ class DB:
 			self.conn.commit()
 			rowid = self.cursor.lastrowid
 		except Exception, e:
-			print "add item exception:", e
+			print "add item exception:", a.get("title"), e
 			rowid = 0
 		return rowid
 	def where(self,p):
@@ -75,9 +76,32 @@ class DB:
 			print "add item exception:", e
 			news = None
 		return news
+	def hasContent(self,sid):
+		try:
+			sql = "SELECT id FROM wp_media_content WHERE sid=%s"
+			ret = self.cursor.execute(sql,tuple(str(sid)))
+			self.conn.commit()
+		except Exception, e:
+			print "update:",e
+			ret = 0
+		return True if ret else False
+	def updateContent(self,content,sid):
 
+		sql = "UPDATE wp_media_content SET content=%s WHERE sid=%s"
+		p = [content,str(sid)]
+		if not self.hasContent(sid) :
+			sql = "INSERT INTO wp_media_content (content,sid) VALUES(%s,%s)"
+		ret = 0
+		try:
+			ret = self.cursor.execute(sql,tuple(p))
+			self.conn.commit()
+		except Exception, e:
+			print "update:",e
+			ret = 0
+		return True if ret > 0 else False
 	def update(self,param,cond):
 		s_set = None
+		p = []
 		for k in param:
 			v = param[k]
 			if s_set is None:
@@ -86,13 +110,13 @@ class DB:
 				s_set = s_set + ","
 			if v is None:
 				v = "NULL"
-			s_set = s_set + " "+k+"='"+str(v)+"' "
+			s_set = s_set + " %s=%%s " % (k,)
+			p.append(str(v))
 		s_where = self.where(cond)
 		sql = "UPDATE wp_media SET %s WHERE %s" % (s_set, s_where)
-		print sql
 		ret = 0
 		try:
-			ret = self.cursor.execute(sql)
+			ret = self.cursor.execute(sql,tuple(p))
 			self.conn.commit()
 		except Exception, e:
 			print "update:",e
@@ -131,3 +155,6 @@ class DB:
 	def close(self):
 		self.cursor.close()
 		self.conn.close()
+
+#db = DB()
+#print db.hasContent(1)

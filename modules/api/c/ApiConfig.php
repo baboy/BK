@@ -3,7 +3,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 	function config(){
 		$conf = array(
 
-				"related_api"=>"http://app.tvie.com.cn/api/v1/recent/movie/",
+				"related_api"=>"http://app.tvie.com.cn/api/v1/movie/recent/query/",
 				"background"=>"http://app.tvie.com.cn/static/images/background.png",
 				"modules"=>array(
 					array(
@@ -12,7 +12,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"电视剧",
 						"icon"=>"",
 						"pic"=>"http://app.tvie.com.cn/static/images/serial.jpg",
-						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
+						"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
 						"filter"=>""
 					),
 					array(
@@ -21,7 +21,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"电影",
 						"icon"=>"",
 						"pic"=>"http://app.tvie.com.cn/static/images/movie.png",
-						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
+						"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
 						"filter"=>""
 					),
 					array(
@@ -30,7 +30,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"综艺",
 						"icon"=>"",
 						"pic"=>"http://app.tvie.com.cn/static/images/zy.png",
-						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
+						"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
 						"filter"=>""
 					),
 					array(
@@ -39,7 +39,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"王牌栏目",
 						"icon"=>"",
 						"pic"=>"http://app.tvie.com.cn/static/images/wp.png",
-						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
+						"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
 						"filter"=>""
 					),
 					array(
@@ -48,7 +48,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"明星",
 						"icon"=>"",
 						"pic"=>"http://app.tvie.com.cn/static/images/star.png",
-						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
+						"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
 						"filter"=>""
 					),
 					array(
@@ -57,7 +57,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"互动",
 						"icon"=>"",
 						"pic"=>"http://app.tvie.com.cn/static/images/chat.png",
-						"api"=>"http://app.tvie.com.cn/api/v1/query/movie",
+						"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
 						"filter"=>""
 					)
 				)

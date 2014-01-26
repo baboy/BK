@@ -14,6 +14,7 @@ import datetime
 import DB
 import md5
 import json
+import codecs
 class Page():
 	def __init__(self):
 		self.timeoutInterval = 20
@@ -57,14 +58,19 @@ class RssParser( HTMLParser):
 					if k == "description":
 						text = re.sub(r'</?\w+[^>]*>','',text);
 					if k == "pubDate":
-						text = datetime.datetime(*eut.parsedate(text)[:6]).strftime('%Y-%m-%d %H:%M:%S')
+						t = datetime.datetime(*eut.parsedate(text)[:6])
+						text = t.strftime('%Y-%m-%d %H:%M:%S')
 					ar[k2] = text
 			if ar.get("author") is None:
 				ar["author"] = "cnbeta.com"
 			ar["type"] = "1"
-			print ar
-			#rowid = self.db.addItem(ar)
-			#print ar.get("title"), rowid
+			if ar.has_key("page_url"):
+				m = md5.new()
+				m.update(ar.get("page_url"))
+				ar["reference_id"] = m.hexdigest()
+			#print ar
+			rowid = self.db.addItem(ar)
+			print ar.get("title"), rowid
 class ContentGrabber( HTMLParser):
 	def __init__(self):
 		HTMLParser.__init__(self)
@@ -116,13 +122,16 @@ class ContentGrabber( HTMLParser):
 		for tag in remove_tags:
 			text = re.sub(r'</?'+tag+r'+[^>]*>','',text);
 		text = re.sub("&#13;","",text)
+		#bom = unicode(codecs.BOM_UTF8, "utf8" )
+		#text = text.replace(bom,"xxxx")
+		#text = text.replace(codecs.BOM,"xxxx")
 		text = text.strip(" \n")
 		#delete prefix tag
 		text = re.sub(r"^<div[^>]*>","",text)
 		#delete postfix tag
 		text = re.sub(r"</div[^>]*>$","",text)
 		# delete empty tag
-		text = re.sub(r"<\w+[^>/]*>[\s]*</\w+>","",text)
+		text = re.sub(r"<(\w+)[^>/]*>[\s]*</\1>","",text)
 		return text,self.parseImages(text)[1]
 
 	def parseSummary(self, doc):
@@ -153,7 +162,8 @@ class ContentGrabber( HTMLParser):
 		#delete postfix tag
 		text = re.sub(r"</div[^>]*>$","",text)
 		# delete empty tag
-		text = re.sub(r"<\w+[^>]*>[\s]*</\w+>","",text)
+		text = re.sub(r"<(\w+)[^>/]*>[\s]*</\1>","",text)
+		text = re.sub(r'</?\w+[^>]*>','',text);
 		text = text.strip(" \n\r\t")
 		return text
 
@@ -171,8 +181,10 @@ class ContentGrabber( HTMLParser):
 			#print summary
 
 			text, imgs = self.parseContent(doc)
+			if summary is not None:
+				text = "<p>"+summary+"</p>"+text
 			#print sid, text, imgs
-			ret_update_content = self.db.update({"content":text}, {"id": sid})
+			ret_update_content = self.db.updateContent(text, sid)
 			for i in range(len(imgs)):
 				img = imgs[i]
 				meta = json.dumps(img)
@@ -187,7 +199,7 @@ class ContentGrabber( HTMLParser):
 				m = md5.new()
 				m.update(src)
 				attachment["key"] = m.hexdigest()
-				print attachment
+				#print attachment
 				attach_id = self.db.addAttachment(attachment)
 			print item["title"], ret_update_content, attach_id
 

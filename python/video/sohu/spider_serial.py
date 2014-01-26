@@ -61,7 +61,11 @@ class SohuVideoParser( ):
 			videoInfo["node"] = "SERIAL"
 			gid = self.db.addItem(videoInfo)
 			if gid < 1:
-				continue
+				gid = self.db.getMediaSid({"reference_id":aid})
+				if gid < 1:
+					continue
+			videoInfo["sid"] = gid
+			self.db.addVideo(videoInfo)
 			#attr_id = self.db.addAttr(gid,"video_total_count", videoInfo["video_total_count"])
 			#attr_id2 = self.db.addAttr(gid,"video_update_count", videoInfo["video_update_count"])
 			#print "gid", gid,attr_id,attr_id2
@@ -74,7 +78,7 @@ class SohuVideoParser( ):
 				v["reference_id"] = str(v["reference_id"])+"_"+str(i)
 				sid = self.db.addItem(v)
 				if sid < 1:
-					break;
+					continue;
 				v["sid"] = sid
 				self.db.addVideo(v)
 				print "sid:",sid, "gid:",gid
