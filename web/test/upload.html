@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<meta charset="UTF-8" />
+
+		<script src="upload.js"			type="text/javascript"></script>
+		<!--script src="lib/jquery.js"			type="text/javascript"></script-->
+		<!--script src="lib/jquery.md5.js"		type="text/javascript"></script-->
+		<style>
+			.upload-item{
+				height:28px;
+			}
+			.upload-item span{
+				line-height: 28px;
+				padding:0 10px 0;
+			}
+			.upload-item label{
+				line-height:28px;
+				float:left;
+				width:100px;
+				text-align: right;
+				padding-right:10px;
+			}
+			.upload-item .progressbar{
+				line-height: 28px;
+				margin-top:12px;
+			}
+			.progressbar{
+				float:left;
+				width:200px;
+			}
+			.progressbar{
+				height:4px;
+				border:1px solid gray;
+				font-size: 0;
+			}
+			.progressbar-inner{
+				height:100%;
+				width:0;
+				background:#ccc;
+			}
+			#img{
+				width:100px;
+			}
+		</style>
+		<script>
+			document.domain = "tvie.com.cn";
+			window.onload = function(){
+				
+			window.uploadMgr = new UploadMgr("upload");
+			}
+			function selectFile(){
+				var fileInput = document.getElementById('fileInput');
+				var file = fileInput.files[0];
+
+				uploadMgr.upload(file);
+
+			}
+		</script>
+	</head>
+	<body>
+		<input type="file" id="fileInput" onchange="selectFile()"/>
+		<div id="upload"></div>
+	</body>
+</html>

@@ -1,0 +1,143 @@
+.etitle{
+	height:60px;
+	line-height:60px;
+	background1: white;
+}
+.etitle .t{
+	height:100%;
+	line-height:100%;
+	text-align: center;
+}
+.etitle input{
+	width:80%;
+	height:100%;
+	line-height:100%;
+	background: transparent;
+	margin: 0;
+	padding: 0;
+	border: none;
+	font-size:24px;
+	font-weight:900;
+	text-align: center;
+}
+.info{
+	width:240px;
+	height:100%;
+	float: left;
+}
+.act{
+	width:240px;
+	height:100%;
+	float: right;
+}
+.mod{
+
+}
+.mod .t{
+	margin:3px;
+	font-size:14;
+	font-weight:900;
+}
+.mod .c{
+	margin:3px;
+}
+.content-wrapper{
+	margin-left: 0;
+	margin-top:20px;
+}
+#main{
+	background: #DDD;
+}
+#content{
+	background: transparent;
+	height:100%;
+}
+#content textarea{
+	width:100%;
+	height:100%;
+}
+.edit-panel{
+	margin:0 20px 0;
+	background: #EEE;
+	padding:10px;
+}
+.edit-item{
+	border-bottom:1px solid #DDD;
+	padding:15px 10px 15px;
+}
+.edit-item:hover{
+	background: #DDD;
+}
+.edit-item a{
+	color:#444;
+}
+
+.pic-box{
+	border:1px solid #DDD;
+	background: white;
+}
+.pic-box div{
+	position:relative;
+	width:160px;
+	height:150px;
+	text-align:center;
+	line-height:150px;
+	vertical-align:middle;
+	display:table-cell;
+}
+.pic-box a.tag{
+	position:absolute;
+	left:0px;
+	top:0px;
+	padding:3px 6px;
+	background:#339DFF;
+	color:#FFF;
+	line-height: 12px;
+	font-size:12px;
+}
+.pic-box img{
+	max-width:150px;
+	max-height:150x;
+	vertical-align:middle;
+}
+.pic-box a.add{
+	display: none;
+}
+.pic-box-empty{
+	text-align: center;
+}
+.pic-box-empty a.add{
+	display: block;
+	height:28px;
+	line-height: 28px;
+	width: :160px;
+	border:1px dotted #CCC;
+}
+.pic-box-empty img, .pic-box-empty a.tag, .pic-box-empty a.del{
+	display: none;
+}
+#div-summary{
+	height:50px;
+}
+#div-summary:focus{
+	border:1px solid #ccc;
+}
+.editable{
+	padding:3px;
+	color:#666;
+}
+.editable:focus{
+	background:white;
+	border-bottom:1px solid #ccc;
+	outline: none;
+	color:#333;
+}
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+}
+.file-browser{
+	float: right;
+	background1: transparent;
+	border1: none;
+	outline: none;
+}

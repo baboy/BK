@@ -27,7 +27,7 @@ MovieHandler.prototype = {
             }
             console.log(role);
             if(!role)
-            	return false;
+            	return true;
             var sid = obj.getAttribute("id");
             console.log(sid);
             switch(role){

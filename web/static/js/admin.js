@@ -1,11 +1,8 @@
-function _s(s){
-	return s?s:"";
-}
-var AppHandler = function(obj){
+var AdminHandler = function(obj){
 	this.container = obj;
 	this.init();
 }
-AppHandler.prototype = {
+AdminHandler.prototype = {
 	init:function(){
 		$(document).ready(function(){
 			$.ajaxPrefilter(function (options){options.global = true;});
@@ -160,22 +157,7 @@ AppHandler.prototype = {
 		app.queryBuilds(product.id);
 	}
 }
-var Status = function(json){
-	this.json = json;
-	this.status = -1;
-	this.msg = "请求失败";
-	this.data = null;
-	if (json && typeof(json)=="object") {
-		this.msg = json["msg"];
-		this.status = json["status"];
-		this.data = json["data"];
-	};
-}
-Status.prototype = {
-	isSuccess:function(){
-		return parseInt(this.status)==1;
-	}
-}
+
 
 //lib
 var NavigationHandler = function(container_id){
@@ -283,13 +265,86 @@ Validator.prototype = {
 		return true;
 	}
 };
-String.prototype.json = function(){
-	var json = null;
-	try{
-		json = eval("("+this+")");
-	}catch(e){
-		console.log(e);
-		json = null;
-	}
-	return json;
+
+var Overlay = function(){
+	this.pannel = document.getElementById("overlay");
+	if (!this.pannel) {
+		var container = document.getElementById("container");
+		var pannel = document.createElement("div");
+		pannel.setAttribute("id","overlay");
+		container.appendChild(pannel);
+
+		this.pannel = pannel;
+	};
 };
+Overlay.getInstance = function () {
+	if (!window.overlay) {
+		window.overlay = new Overlay();
+	};
+	return window.overlay;
+};
+Overlay.prototype = {
+	showPage:function(url){
+		var iframe = document.createElement("iframe");
+		iframe.src = url;
+		this.pannel.appendChild(iframe);
+		this.pannel.style.display = 'block';
+	},
+	pop:function(){
+		if (this.pannel.hasChildNodes()) {
+			this.pannel.removeChild(this.pannel.lastChild);
+		};
+		if (!this.pannel.hasChildNodes()) {
+			this.pannel.style.display = 'none';
+		};
+	}
+};
+var HashEventManager = function(){
+	this.events = {};
+};
+HashEventManager.getInstance = function(){
+	if (!window.hashEventManager) {
+		window.hashEventManager = new HashEventManager();
+		window.onhashchange = function(){
+			var h = window.location.hash;
+			h = h.substring(1);
+			HashEventManager.getInstance().fire(h);
+		};
+	};
+	return window.hashEventManager;
+};
+HashEventManager.prototype = {
+	addEventListener:function(hash,func){
+		this.events[hash] = func;
+	},
+	fire:function(hash){
+		if (!hash) {
+			hash = "_default_";
+		};
+		var p = hash.split("/");
+		var k = p[0];
+		p.splice(0,1);
+		console.log(this.events);
+		var func = this.events[k];
+		if (!func) {
+			k = "_default_";
+			func = this.events[k];
+		};
+		if (func) {
+			return func.apply(null,p);
+		};
+		console.log("fire:"+k+","+func);
+		/**
+		/edit/{module}/sid
+		
+		**/
+	}
+};
+$(document).ready(function(){
+	HashEventManager.getInstance().addEventListener("edit",function(sid){
+		Overlay.getInstance().showPage("http://www.sohu.com");
+	});
+	HashEventManager.getInstance().addEventListener("_default_",function(sid){
+		Overlay.getInstance().pop();
+	});
+});

@@ -9,7 +9,8 @@
 		<link rel="stylesheet" type="text/css" href="<?=$relatvie_path?>/static/css/main.css">
 		<script src="<?=$relatvie_path?>/static/js/jquery.js"></script>
 		<script src="<?=$relatvie_path?>/static/js/jquery.form.js"></script>
-		<script src="<?=$relatvie_path?>/static/js/app.package.js?<?=rand()?>"></script>
+		<script src="<?=$relatvie_path?>/static/js/init.js?<?=rand()?>"></script>
+		<script src="<?=$relatvie_path?>/static/js/admin.js?<?=rand()?>"></script>
 		<script src="<?=$relatvie_path?>/static/js/module.movie.js?<?=rand()?>"></script>
 		<style>
 			.div-input{
@@ -44,6 +45,7 @@
 				var app = new MovieHandler(appDiv);
 				app.showMovieList();
 			}
+
 		</script>
 	</head>
 	<body>

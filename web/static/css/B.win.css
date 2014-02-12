@@ -1,0 +1,218 @@
+img{vertical-align:middle;}
+/*窗体框架*/
+.BINDOW{
+	position:absolute;
+	width:300px;
+	height:200px;
+	overflow:hidden;
+	z-index:10;
+}
+.BINDOW-SHADOW{	
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	background:white;
+	display:none;
+	filter:alpha(opacity=10);
+	opacity:0.1;
+}
+.BINDOW-PANEL{
+	position:absolute;
+	top:28px;
+	bottom:6px;
+	left:6px;
+	right:6px;
+}
+.BINDOW-TITLEBAR{
+	position:absolute;
+	top:0;
+	left:6px;
+	right:6px;
+	height:28px;	
+	background-image:url(/static/images/win/bg-top.gif) ;
+	background-repeat: repeat-x;	
+	-moz-user-select:none;
+	hutia:expression(this.onselectstart=function(){return(false)});
+}
+.BINDOW-ICON{
+	position:absolute;
+	width:18px;
+	height:18px;
+	bottom:5px;
+	left:1px;
+}
+.BINDOW-TITLE{
+	position:absolute;
+	color:black;
+	font-weight:900;
+	cursor:default;	
+	height:18px;
+	left:20px;
+	right:90px;
+	bottom:1px;
+}
+.BINDOW-BTN-MINIMIZE, .BINDOW-BTN-MAXIMIZE, .BINDOW-BTN-EXIT{
+	display: block;
+	width:28px;
+	height:15px;
+}
+.BINDOW-BTN-MINIMIZE{
+	position:absolute;
+	bottom:5px;
+	right:61px;
+	background:url(/static/images/win/minimize.gif);
+}
+.BINDOW-BTN-MAXIMIZE{
+	position:absolute;
+	bottom:5px;
+	right:32px;
+	background:url(/static/images/win/maximize.gif);
+}
+.BINDOW-BTN-EXIT{
+	position:absolute;
+	right:2px;
+	bottom:5px;
+	background:url(/static/images/win/exit.gif);
+}
+.BINDOW-PANEL-CONTENT{
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;	
+	background-color:#FFF;
+}
+/*九宫格*/
+.BINDOW-TOPLEFT{
+    /*position:absolute;*/
+	background:url(/static/images/win/bg-top-left.gif) no-repeat;
+	/*left:0;
+	top:0;*/
+	width:6px;
+	height:28px;
+    float:left;
+}
+.BINDOW-TOP{
+	/*position:absolute;*/
+	top:0;
+	/*left:6px;
+	right:6px;*/
+	height:28px;	
+	background-image:url(/static/images/win/bg-top.gif) ;
+	background-repeat: repeat-x;	
+}
+.BINDOW-TOPRIGHT{
+	/*position:absolute;*/
+	background:url(/static/images/win/bg-top-right.gif) no-repeat;
+	/*right:0;
+	top:0;*/
+    float:right;
+	width:6px;
+	height:28px;
+}
+.BINDOW-LEFT{
+	position:absolute;
+	background:url(/static/images/win/bg-left.gif) repeat-y;
+	width:6px;
+	top:28px;
+	bottom:4px;
+	left:0;
+}
+.BINDOW-RIGHT{
+	position:absolute;
+	background:url(/static/images/win/bg-right.gif) repeat-y;
+	width:6px;
+	top:28px;
+	right:0;
+	bottom:6px;
+}
+.BINDOW-BOTTOMLEFT{
+	position:absolute;
+	background:url(/static/images/win/bg-bottom-left.gif) no-repeat;
+	width:6px;
+	height:6px;
+	left:0;
+	bottom:0;
+}
+.BINDOW-BOTTOM{
+	position:absolute;
+	background:url(/static/images/win/bg-bottom.gif) repeat-x;
+	height:6px;
+	left:6px;
+	right:6px;
+	bottom:0;
+}
+.BINDOW-BOTTOMRIGHT{
+	position:absolute;
+	background:url(/static/images/win/bg-bottom-right.gif) no-repeat;
+	width:6px;
+	height:6px;
+	right:0;
+	bottom:0;
+}
+
+.BINDOW-STATUSBAR{
+	height:31px;
+	z-index:5000;
+	position:absolute;
+	background:url(/static/images/win/bg-statusbar.gif) repeat-x;
+	width:100%;
+	bottom:0;
+	left:0;
+}
+.BINDOW-STATUS-ITEM,.BINDOW-STATUS-ITEM-ON{
+	margin:2px 1px 1px 1px;
+	cursor:pointer;
+}
+.BINDOW-STATUS-ITEM,.BINDOW-STATUS-ITEM-ON,.BINDOW-STATUS-ITEM div,.BINDOW-STATUS-ITEM-ON div{
+	float:left;
+	height:28px;
+}
+.BINDOW-STATUS-ITEM img,.BINDOW-STATUS-ITEM-ON img{
+	margin-right:3px;
+}
+
+.BINDOW-STATUS-ITEM .BINDOW-STATUS-ITEM-LEFT,.BINDOW-STATUS-ITEM-ON .BINDOW-STATUS-ITEM-LEFT{
+	background:url(/static/images/win/bg-status-left.gif) no-repeat;
+	width:5px;
+	height:100%;
+}
+.BINDOW-STATUS-ITEM .BINDOW-STATUS-ITEM-MID,.BINDOW-STATUS-ITEM-ON .BINDOW-STATUS-ITEM-MID{
+	background:url(/static/images/win/bg-status-mid.gif) repeat-x;
+	height:100%;
+	line-height:28px;
+	font-weight:700;
+	color:white;
+}
+.BINDOW-STATUS-ITEM .BINDOW-STATUS-ITEM-RIGHT,.BINDOW-STATUS-ITEM-ON .BINDOW-STATUS-ITEM-RIGHT{
+	background:url(/static/images/win/bg-status-right.gif) no-repeat;
+	width:5px;
+	height:100%;
+}
+.BINDOW-STATUS-ITEM-ON .BINDOW-STATUS-ITEM-LEFT{
+	background:url(/static/images/win/bg-status-left-on.gif) no-repeat;
+}
+.BINDOW-STATUS-ITEM-ON .BINDOW-STATUS-ITEM-MID{
+	background:url(/static/images/win/bg-status-mid-on.gif) repeat-x;
+}
+.BINDOW-STATUS-ITEM-ON .BINDOW-STATUS-ITEM-RIGHT{
+	background:url(/static/images/win/bg-status-right-on.gif) no-repeat;
+}
+.BINDOW-TOOLBAR{	
+	background: url(/static/images/win/bg-toolbar.jpg) repeat-x;
+	height:24px;
+	line-height:24px;
+	border-bottom:2px solid #CCC;
+}
+.BINDOW-TOOLBAR-ITEM{
+	padding-left:5px;
+	padding-right:5px;
+	cursor:pointer;
+	float:left;
+	height:100%;
+	vertical-align:middle;
+	overflow:hidden;
+	-moz-user-select:none;hutia:expression(this.onselectstart=function(){return(false)});
+}
