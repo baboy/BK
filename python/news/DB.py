@@ -9,11 +9,6 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-SQL_INSERT = "INSERT INTO wp_media (appid,module,node,title,content,actors,thumbnail,pic,thumbnail_hor,pic_hor,reference_id,director,pubdate,area,duration,score,type,type_name,total_count,update_count) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-SQL_UPDATE_CONTENT = "UPDATE wp_media set content=%s where reference_id=%s"
-SQL_ADD_VIDEO= "insert into wp_media_video(sid,thumbnail,pic,thumbnail_hor,pic_hor,m3u8,sd,high,super,original,mp4,duration,content, page_url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-
-SQL_QUERY_RSSSOURCE = "SELECT category,source FROM cms_tvie_rss WHERE status='publish' "
 class DB:
 	def __init__(self):
 		self.conn = MySQLdb.connect(host=DBConstant.DB_HOST, user=DBConstant.DB_USER, passwd=DBConstant.DB_PWD, db=DBConstant.DB_NAME,charset="utf8")
@@ -26,18 +21,18 @@ class DB:
 		#self.conn.close()
 	#@param a:article
 	def addItem(self,a):
-		sql = "INSERT INTO wp_media (appid,module,node,title,summary,content,author,type,pubdate,update_date,reference_id,page_url) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+		sql = "INSERT INTO wp_media (appid,module,node,title,summary,author,type,pubdate,update_date,reference_id,page_url) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 		param = (self.appid,
 				self.module,
 				a.get("node"),
 				a.get("title"),
 				a.get("summary") ,
-				a.get("content") ,
+				#a.get("content") ,
 				a.get("author"),
 				a.get("type"), 
 				a.get("pubdate"), 
 				a.get("pubdate"), 
-				a.get("reference_id"), 
+				None,#a.get("reference_id"), 
 				a.get("page_url"))
 		rowid = 0
 		try:

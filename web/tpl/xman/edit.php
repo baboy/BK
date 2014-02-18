@@ -40,7 +40,7 @@
 			    plugins: [
 			         "advlist autolink link image lists charmap print preview hr anchor pagebreak",
 			         "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking spellchecker",
-			         "table contextmenu directionality emoticons paste textcolor responsivefilemanager"
+			         "table contextmenu directionality emoticons paste textcolor"
 			   ],
 			    relative_urls: false,
 			    browser_spellcheck : true ,
@@ -50,34 +50,40 @@
 			  },
 			  
 			   image_advtab: true,
-			   toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect | title",
-			   toolbar2: "| responsivefilemanager | image | media | link unlink anchor | print preview code "
+			   toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link unlink anchor | print preview code | styleselect"
 			 });
 
 		</script>
+		<?php
+			$sid = "";
+			if(!empty($data))
+				$sid = $data["sid"];
+		?>
 	</head>
 	<body>
 		<div id="container">
-			<div class="etitle">
-				<div style="float:left;padding:0 10px 0;font-size:20px;font-weight:900;color:#666" role="close"> &lt; 编辑</div>
-				<div style="float:right;padding:0;font-size:20px;font-weight:900;color:#666;padding:0 15px 0;">
-					<a style="padding:5px 10px 5px;background:#339DFF;color:#FFF;font-size:14px;font-weight:0" role="post">保存</a>
+			<form action="" method="POST" onsubmit="return false;">
+				<div class="etitle">
+					<div style="float:left;padding:0 10px 0;font-size:20px;font-weight:900;color:#666" role="close"> &lt; 编辑</div>
+					<div style="float:right;padding:0;font-size:20px;font-weight:900;color:#666;padding:0 15px 0;">
+						<a style="padding:5px 10px 5px;background:#339DFF;color:#FFF;font-size:14px;font-weight:0" role="post">保存</a>
+					</div>
+					<div class="t"><input type="text" value="无题" name="title" id="title" /></div>
 				</div>
-				<div class="t"><input type="text" value="无题" name="title" id="title" /></div>
-			</div>
-			<div id="main" style="border:1px solid #CCC;">
-				<form action="" method="POST" onsubmit="return false">
-					<input type="hidden" id="id">
+				<div id="main" style="border:1px solid #CCC;">
+					<input type="hidden" id="sid" name="sid" value="<?=$sid?>">
 					<div id="act" class="act">
 						<div class="edit-panel">
 							<div class="edit-item">
-								<div class="editable" contenteditable="true" placeholder="添加文章摘要" id="div-summary"></div>
+								<input type="hidden" name="summary" id="summary" display="display-summary"/>
+								<div class="editable" contenteditable="true" placeholder="添加文章摘要" id="display-summary"></div>
 							</div>
 							<div class="edit-item">
 								<div class="pic-box-empty" id="pic-box">
 									<div>
-										<a class="add" role="pic-add" box="pic-box" display="pic">+ 添加海报</a>
-										<img display="pic" id="pic" role="pic-add" box="pic-box"/>
+										<input type="hidden" name="pic" id="pic" display="display-pic" box="pic-box"/>
+										<a class="add" role="pic-add" box="pic-box" display="display-pic">+ 添加海报</a>
+										<img display="display-pic" id="display-pic" role="pic-add" box="pic-box"/>
 										<a class="tag">海报</a>
 										<a class="del"></a>
 									</div>
@@ -86,8 +92,9 @@
 							<div class="edit-item">
 								<div class="pic-box-empty" id="thumbnail-box">
 									<div>
-										<a class="add" role="pic-add" box="thumbnail-box" display="thumbnail">+ 添加缩略图</a>
-										<img id="thumbnail" display="thumbnail" role="pic-add" box="thumbnail-box" />
+										<input type="hidden" name="thumbnail" id="thumbnail" display="display-thumbnail" box="thumbnail-box"/>
+										<a class="add" role="pic-add" box="thumbnail-box" input="thumbnail" display="display-thumbnail">+ 添加缩略图</a>
+										<img id="display-thumbnail" display="display-thumbnail" input="thumbnail" role="pic-add" box="thumbnail-box" />
 										<a class="tag">缩略图</a>
 										<a class="del"></a>
 									</div>
@@ -95,13 +102,13 @@
 							</div>
 
 							<div class="edit-item">
-								<input type="hidden" id="m3u8" name="m3u8"/>
-								<div class="editable" contenteditable="true" placeholder="m3u8" id="div-m3u8"></div>
+								<input type="hidden" id="m3u8" name="m3u8" display="display-m3u8" />
+								<div class="editable" contenteditable="true" placeholder="m3u8" id="m3u8" id="display-m3u8"></div>
 							</div>
 							<div class="edit-item">
-								<input type="hidden" id="mp4" name="mp4"/>
-								<button class="file-browser" role="file-browser" display="div-mp4" input="mp4">File</button>
-								<div class="editable" contenteditable="true" placeholder="mp4" input="mp4" id="div-mp4"></div>
+								<input type="hidden" id="mp4" name="mp4" display="display-mp4" />
+								<button class="file-browser" role="file-browser" display="display-mp4" input="mp4">File</button>
+								<div class="editable" contenteditable="true" placeholder="mp4" input="mp4" id="display-mp4"></div>
 							</div>
 						</div>
 					</div>
@@ -130,6 +137,18 @@
 							<div class="edit-item">
 								<a>关键字</a>
 							</div>
+							<div class="edit-item">
+								<input type="hidden" id="pubdate" name="pubdate" display="display-pubdate"/>
+								<div class="editable" contenteditable="true" placeholder="发行日期" id="display-pubdate" input="pubdate"></div>
+							</div>
+							<div class="edit-item">
+								<input type="hidden" id="director" name="director" display="display-director"/>
+								<div class="editable" contenteditable="true" placeholder="导演" id="display-director" input="director"></div>
+							</div>
+							<div class="edit-item">
+								<input type="hidden" id="actor" name="actor" display="display-actor"/>
+								<div class="editable" contenteditable="true" placeholder="主演" id="display-actor" input="actor" role="reference-input"></div>
+							</div>
 						</div>
 					</div>
 					<div class="content-wrapper" id="content-wrapper">
@@ -137,8 +156,8 @@
 						<textarea></textarea>
 						</div>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 
 	</body>

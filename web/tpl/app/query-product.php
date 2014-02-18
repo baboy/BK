@@ -1,13 +1,14 @@
 <table>
 	<thead>
-		<th class='app-name'>Name</th>
-		<th class='app-package'>Package</th>
-		<th class='app-developer'>Developer</th>
-		<th class='app-action'>Action</th>
+		<th style="width:100px">Name</th>
+		<th style="width:200px">Package</th>
+		<th style="width:100px">Developer</th>
+		<th>Description</th>
+		<th style="width:100px">Action</th>
 	</thead>
 	<tbody>
 		<tr class='row-input' role='add' style='background:#EEE;display:none1'>
-			<td colspan='4'>
+			<td colspan='5'>
 				<div class='div-input'>
 					<form action="/app/register" method="post">
 						<div><label>Product Name</label><input type='text' name='name'/></div>
@@ -27,8 +28,9 @@
 			<td><span role="view-detail" data='<?=json_encode($item)?>'><?=_s($item->name)?></span></td>
 			<td><?=_s($item->package)?></td>
 			<td><?=_s($item->developer)?></td>
+			<td class="desc"><?=_s($item->description)?></td>
 			<td class='row-action'>
-				<a role='view-builds' data='<?=json_encode($item)?>'>Builds</a>
+				<a role='view-builds' data='<?=json_encode($item)?>' id="app-<?=$item->id?>">Builds</a>
 			</td>
 		</tr>
 		<?php } ?>

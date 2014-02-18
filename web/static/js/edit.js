@@ -39,16 +39,31 @@ EditHandler.prototype = {
             		box = document.getElementById(obj.getAttribute("box"));
             		display = document.getElementById(obj.getAttribute("display"));
             		handler.browserImage(obj, box, display);
+            		break;
 
             	}
             	case "post":{
-            		handler.post();
+            		handler.post(obj);
+            		break;
             	}
             	case "close":{
             		handler.close();
+            		break;
             	}
             };
-		}
+		};
+		
+	},
+	formReady:function(){
+		var forms = document.getElementsByTagName("form");
+		for(var i =0, n = forms.length; i < n; i++){
+			var form = forms[i];
+			var inputs = form.getElementsByTagName("input");
+			for(var j = 0, n2 = inputs.length; j < n2; j++){
+				var input = inputs[j];
+				setReferenceValue(input);
+			}
+		};
 	},
 	browserMp4:function(obj, input, display){
 		console.log(obj,input,display);
@@ -71,10 +86,36 @@ EditHandler.prototype = {
 		}
 		BWinMgr.getInstance().openWindow(param).setLink("/xman/file/mgr/", {"_callback_":"parent._select_file_"});
 	},
-	post:function(){
+	post:function(obj){
+		this.formReady();
+		var form = null;
+		while( obj && !form ){
+			var tagName = obj.tagName.toLowerCase();
+			if (tagName == "form") {
+				form = obj;
+				break;
+			};
+			obj = obj.parentNode;
+		};
+		if (!form) {
+			return;
+		};
+		var inputs = form.getElementsByTagName("input");
+		var param = {};
+		for(var i = 0, n = inputs.length; i < n; i++){
+			var input = inputs[i];
+			var field = input.getAttribute("name");
+			param[field] = input.value;
+		}
+		param["content"] = tinyMCE.activeEditor.getContent({format : 'raw'});
+		console.log(param); 
+
+		/*
 		var fields = {
 			"id":"id",
 			"title":"title",
+			"actor":"actor",
+			"director":"director",
 			"thumbnail":"thumbnail",
 			"pic":"pic",
 			"subtitle":"subtitle",
@@ -103,12 +144,70 @@ EditHandler.prototype = {
 		}
 		param["content"] = tinyMCE.activeEditor.getContent({format : 'raw'});
 		console.log(param);
+		*/
 
 	},
-	query:function(){
+	load:function(){
+		var sid = document.getElementById("sid").value;
+		var setPic = function(obj, url){
+			console.log(obj,url);
 
+			setReferenceValue(obj, url);
+			var box = document.getElementById(obj.getAttribute("box"));
+			if (url) {
+				box.className = "pic-box";
+			}else{
+				box.className = "pic-box-empty";
+			}
+		};
+		var updateInfo = function(m){
+			var fields = {
+			"id":{"field":"sid"},
+			"title":{"field":"title"},
+			"thumbnail":{"field":"thumbnail","setter":setPic},
+			"pic":{"field":"pic","setter":setPic},
+			"subtitle":{"field":"subtitle"},
+			"author":{"field":"author"},
+			"tag":{"field":"tag"},
+			"summary":{"field":"summary","setter":setReferenceValue},
+			"m3u8":{"field":"sd","setter":setReferenceValue},
+			"mp4":{"field":"mp4","setter":setReferenceValue}};
+			for(var k in fields){
+				var obj = document.getElementById(k);
+				if (!obj) {
+					continue;
+				};
+				var conf = fields[k];
+				var field = conf["field"];
+				var func = conf["setter"];
+				var val = m[field];
+				if (func) {
+					func(obj, val);
+					continue;
+				};
+				var tagName = obj.tagName.toLowerCase();
+				if (tagName == "input") {
+					obj.value = val;
+				}else if(tagName == "img"){
+					obj.setAttribute("src",val);
+				}else{
+					obj.innerHTML = val;
+				}
+
+			};
+			tinyMCE.activeEditor.setContent(m["content"]);
+			console.log(m);
+		};
+		$.getJSON("/xman/media/detail/",{"sid":sid}, function(ret){
+			var res = new HttpResponse(ret);
+			console.log(res);
+			if (res.isSuccess()) {
+				updateInfo(ret.data);
+			};
+		});
 	},
 	close:function(){
+		parent.location.hash = "#";
 		BWinMgr.getInstance().close();
 	}
 }
@@ -128,5 +227,5 @@ $(document.body).ready(function(){
 	    $("#content-wrapper").css("width",contentWidth);
 	 });
 	$(window).resize();
-	EditHandler.getInstance("container");
+	EditHandler.getInstance("container").load();
 });

@@ -201,7 +201,7 @@ class ContentGrabber( HTMLParser):
 				attachment["key"] = m.hexdigest()
 				#print attachment
 				attach_id = self.db.addAttachment(attachment)
-			print item["title"], ret_update_content, attach_id
+				print item["title"], ret_update_content, attach_id
 
 
 #parser = RssParser("http://cnbeta.feedsportal.com/c/34306/f/624776/index.rss")

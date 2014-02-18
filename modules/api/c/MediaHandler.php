@@ -1,15 +1,10 @@
 <?php
 
 class MediaHandler extends bf\core\HttpRequestHandler{
-	function getModel($modelName){
-		if (empty($this->model)) {
-			require_once dirname(__FILE__)."/../m/$modelName.php";
-			$this->model = new $modelName();
-		}
-		return $this->model;
-	}
 	function init(){
-		$this->getModel("Media");
+		//$this->getModel("Media");
+		global $media;
+		$this->model = $media;
 	}
 	function queryParam(){
 		$fields = array(
@@ -52,7 +47,6 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 				"module"=>array("type"=>"string")
 			);
 		return $fields;
-
 	}
 	function recent($param){
 		$data = $this->model->queryRecent($param["module"], empty($param["sid"]) ? null:$param["sid"],$param["count"]);

@@ -38,6 +38,20 @@ MapList.prototype={
 			return null;
 		else
 			return this._list[i].value;
+	},
+	getByField:function(k, v){
+		var l = this._list;
+		var n=l.length;
+		for (var i=0;i<n ;i++ ){
+			var e=l[i];
+			var attr = e.value;
+			if (typeof(attr)=="object") {
+				if (attr[k]==v) {
+					return e;
+				};
+			};
+		}
+		return null;
 	}
 }
 var BWinMgr=function(){
@@ -55,18 +69,6 @@ BWinMgr.getInstance = function(){
 BWinMgr.prototype={
 	remove:function(k){
 		this._mapList.remove(k);
-	},
-	getByPname:function(k){
-		var n=this._mapList.length();
-		for (var i=0;i<n ;i++ ){
-			var w=this._mapList.getByIndex(i);
-			if(w.params.pname==k)
-				return w;
-		}
-		return null;
-	},
-	exists:function(k){
-		return this.getByPname(k)!=null;
 	},
 	//绑定窗口和状态栏
 	bind : function(win, param){
@@ -112,7 +114,7 @@ BWinMgr.prototype={
 			return false;
 		//是否为单实例窗口
 		if(p.unique){
-			var v=this.getByPname(p.pname);
+			var v=this._mapList.getByField("name", p.pname);
 			if(v){
 				this.setTopWindowFocus(false);
 				v.win.setVisible(true);
@@ -145,6 +147,12 @@ BWinMgr.prototype={
 		var pid = this._pid++;
 		var overlay = new Overlay(document.body);
 		p._pid_ = pid;
+		if (p.unique && p.name) {
+			var attr = this._mapList.getByField("name", p.id);
+			if (attr) {
+				this.close(attr.key);
+			};
+		};
 		this._mapList.add(pid,{"pid":pid,"win":overlay, "params":p});
 		overlay.open(url, p);
 	},
@@ -158,6 +166,7 @@ BWinMgr.prototype={
 		};
 		var obj = this._mapList.remove(pid);
 		var win = obj.win;
+		console.log(win);
 		win.close();
 	}
 }
@@ -170,6 +179,7 @@ var Overlay = function(container){
 		pannel.setAttribute("id","overlay");
 		this.pannel = pannel;
 	};
+	this.contentDiv = null;
 };
 Overlay.prototype = {
 	getUrl:function(link, p){
@@ -194,15 +204,23 @@ Overlay.prototype = {
 	open:function(link, p){
 		var url = this.getUrl(link, p);
 		console.log(url);
+		var contentDiv = document.createElement("div");
+		contentDiv.style.width = "100%";
+		contentDiv.style.height = "100%";
 		var iframe = document.createElement("iframe");
 		iframe.src = url;
-		this.pannel.appendChild(iframe);
+		contentDiv.appendChild(iframe);
+		this.pannel.appendChild(contentDiv);
 		this.pannel.style.display = 'block';
 		if (!this.pannel.parentNode) {
 			this.container.appendChild(this.pannel);
 		};
+		this.contentDiv = contentDiv;
 	},
 	close:function(){
-		this.pannel.parentNode.removeChild(this.pannel);
+		this.contentDiv.parentNode.removeChild(this.contentDiv);
+		if(this.pannel.children.length<1){
+			this.pannel.parentNode.removeChild(this.pannel);
+		}
 	}
 };

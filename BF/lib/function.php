@@ -156,4 +156,14 @@
 	function _s($s){
 		return isset($s)?($s==null?"":$s):"";
 	}
+	function dayStartTime($t){
+		$date = getdate($t);
+		$stime = mktime(0, 0, 0, $date["mon"], $date["mday"], $date["year"] );
+		return $stime;
+	}
+	function dayEndTime($t){
+		$date = getdate($t);
+		$etime = mktime(23, 59, 59, $date["mon"], $date["mday"], $date["year"] );
+		return $etime;
+	}
 ?>

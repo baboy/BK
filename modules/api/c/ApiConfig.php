@@ -12,7 +12,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 						"title"=>"电视剧",
 						"icon"=>"",
 						"pic"=>"http://app.tvie.com.cn/static/images/serial.jpg",
-						"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
+						"api"=>"http://app.tvie.com.cn/api/v1/serial/query/",
 						"filter"=>""
 					),
 					array(

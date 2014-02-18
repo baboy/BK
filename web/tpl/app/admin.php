@@ -68,15 +68,6 @@
 			}
 			window.onload = function(){
 				$("#content").attr("src","/xman/news");
-				var param = {width:600,
-						height:300,
-						minwidth:600,
-						minheight:200,
-						fullscreen:true,
-						title:'Humail',
-						unique:true
-					};
-				BWinMgr.getInstance().openOverlay("/xman/edit/?sid=1", {"_callback_":"parent._insert_"});
 			}
 			$(document.body).ready(function(){
 				$(window).resize(function() {

@@ -402,8 +402,10 @@ BTree.prototype.remove=function(f){//移除节点 可以移除多个
 	//this.build();
 	this.selectedItemById();
 }
-BTree.prototype.clickById=function(id){//模拟点击事件
-	if(!id)return false;
+BTree.prototype.clickById=function(){//模拟点击事件
+	if(arguments.length<1)
+		return false;
+	var id = arguments[0];
 	var o=BTree.getObjectsByKeyValue(this._list,this._fields.id,id);
 	if(o.length!=1)return false;
 	var item=o[0]._item;

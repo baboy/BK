@@ -17,7 +17,22 @@
 
 
 
-  truncate table wp_media_list;
+drop table wp_media_content;
+truncate table wp_media;
+truncate table wp_media_attr;
+truncate table wp_media_serial_video;
+truncate table wp_media_video;
+truncate table wp_media_attachment;
+CREATE TABLE `wp_media_content` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL,
+  `content` longtext,
+  UNIQUE KEY `id` (`id`),
+  KEY `sid` (`sid`),
+  CONSTRAINT `wp_media_content_ibfk_1` FOREIGN KEY (`sid`) REFERENCES `wp_media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 insert into wp_media_list(gid,`key`,`index`,value) values('movie','type',1,'爱情');
 insert into wp_media_list(gid,`key`,`index`,value) values('movie','type',2,'战争');
 insert into wp_media_list(gid,`key`,`index`,value) values('movie','type',3,'喜剧');
@@ -97,3 +112,6 @@ insert into wp_media_list(gid,`key`,`index`,value) values('serial','area',6,'英
 insert into wp_media_list(gid,`key`,`index`,value) values('serial','area',7,'泰剧');
 insert into wp_media_list(gid,`key`,`index`,value) values('serial','area',8,'日剧');
 insert into wp_media_list(gid,`key`,`index`,value) values('serial','area',9,'其它');
+
+
+

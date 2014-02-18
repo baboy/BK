@@ -19,6 +19,7 @@ class ApplicationContext{
 		global $__DB__;
 		$__DB__ = new Dao($config->getSqlConfig());
 		$this->db = $__DB__;
+		$config->loadLibrary();
 	}
 	static function getInstance($config){
 		global $_applicationContext;
@@ -75,13 +76,18 @@ class ApplicationContext{
 			include WEB_ROOT_DIR."/tpl/".$route->result->view;
 			return;
 		}
+		if( $type == "stream"){
+			if (!empty($route->result->view)) {
+				include WEB_ROOT_DIR."/tpl/".$route->result->view;
+			}
+			return;
+		}
 		if ($type=="html-json") {
 			ob_start();
 			include WEB_ROOT_DIR."/tpl/".$route->result->view;
 			$status->data = ob_get_contents();
 			ob_end_clean();
 		}
-
 		if(!empty($status))
 			echo json_encode($status);
 	}

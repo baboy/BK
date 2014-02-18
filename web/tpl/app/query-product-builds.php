@@ -11,13 +11,17 @@
 			<td colspan='5'>
 				<div class='div-input'>
 					<form action="/app/add/build" method="post">
-						<div><label>Product Name</label><span>--</span></div>
-						<div><label>Package</label><span>--</span></div>
+						<div><label>Product Name</label><span><?=$data->name?></span></div>
+						<div><label>Package</label><span><?=$data->package?></span></div>
 						<div><label>channel:</label><input type='text' name='channel'/></div>
 						<div><label>version:</label><input type='text' name='version'/></div>
 						<div><label>build:</label><input type='text' name='build'/></div>
 						<div><label>description:</label><input type='text' name='description'/></div>
-						<div><label>App:</label><input type='file' name='app_file'/><input type="hidden" name="download_url"/></div>
+						<div>
+							<label>App:</label><a id="display-download_url" input="download_url"></a>
+							<input type='file' name='app_file' id="app_file" onchange="uploadAppPackage()" role="upload-file"/>
+							<input type="hidden" name="download_url" id="download_url" display="display-download_url"/>
+						</div>
 						<input type="hidden" name="appid" value="<?=$data->id?>"/>
 						<div class='div-submit'><button role='add-build' class='submit'>Submit</button></div>
 					</form>
@@ -34,9 +38,9 @@
 			<td><span role="view-detail" data='<?=json_encode($item)?>'><?=_s($item->channel)?></span></td>
 			<td><?=_s($item->version)?></td>
 			<td><?=_s($item->build)?></td>
-			<td><?=_s($item->description)?></td>
+			<td class="desc"><?=_s($item->description)?></td>
 			<td class='row-action'>
-				<a href="<?=_s($itemdownload_url)?>" role='download' data='<?=json_encode($item)?>'>Download</a>
+				<a href="<?=_s($item->download_url)?>" role='download' data='<?=json_encode($item)?>'>Download</a>
 			</td>
 		</tr>
 		<?php } ?>

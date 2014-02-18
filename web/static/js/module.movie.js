@@ -76,5 +76,9 @@ MovieHandler.prototype = {
 		}else{
 			$(tr).addClass("selected");
 		}
+		this.edit(sid);
+	},
+	edit:function(sid){
+		parent.location.hash = "#edit/"+sid;
 	}
 }
