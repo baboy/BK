@@ -68,8 +68,20 @@ AppHandler.prototype = {
             	}
             	//点击Builds
             	case "view-builds":{
-            		var data = obj.getAttribute("data").json();
-            		return handler.viewBuilds(data);
+            		var appid = obj.getAttribute("appid");
+            		//return handler.viewBuilds(appid);
+            		break;
+            	}
+            	case "toggle":{
+            		var toggleId = obj.getAttribute("toggle");
+            		if (toggleId) {
+            			var div = document.getElementById(toggleId);
+            			if (div) {
+            				var display = div.style.display == "none" ? "table-row" : "none";
+            				div.style.display = display;
+            			};
+            		};
+
             		break;
             	}
             };
@@ -150,12 +162,13 @@ AppHandler.prototype = {
 			}
 		});
 	},
-	viewBuilds:function(product){
+	viewBuilds:function(appid){
 		var buildDiv = document.createElement("div");
 		var app = new AppHandler(buildDiv);
 		this.container.nav.push(buildDiv);
-		buildDiv.setTitle("App Builds For [<strong>"+product.name+"</strong>]  package:[<strong>"+product.package+"</strong>]");
-		app.queryBuilds(product.id);
+		buildDiv.setNavBarVisible(false);
+		//buildDiv.setTitle("App Builds For [<strong>"+product.name+"</strong>]  package:[<strong>"+product.package+"</strong>]");
+		app.queryBuilds(appid);
 	},
 	uploadAppPackage:function(f){
 		var uploadMgr = new UploadMgr("display-download_url");
@@ -181,20 +194,26 @@ function uploadAppPackage(evt){
 
 }
 
+$(document).ready(function(){
+	var addBtn = document.createElement("button");
+	addBtn.innerHTML = "Add";
+	var appDiv = document.createElement("div");
+	var nav = new NavigationHandler("app-content");
+	nav.push(appDiv);
+	appDiv.setTitle("App Management");
+	appDiv.setNavBarVisible(false);
+	appDiv.setRightItem(addBtn);
 
-
-
-var Validator = function(){
-
-};
-Validator.getInstance = function(){
-		return new Validator();
-}
-Validator.prototype = {
-	checkForm:function(form){
-		$("input").each(function(i){
-
-		});
-		return true;
+	window.appHandler = new AppHandler(appDiv);
+	appHandler.showProducts();
+	addBtn.onclick = function(){
+		appHandler.toggleAddForm();
 	}
-};
+
+	HashEventManager.getInstance().addEventListener("builds",function(appid){
+		appHandler.viewBuilds(appid);
+	});
+	var h = window.location.hash;
+	h = h.substring(1);
+	HashEventManager.getInstance().fire(h);
+});

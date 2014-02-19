@@ -30,6 +30,9 @@ class AppHandler extends bf\core\HttpRequestHandler{
 		$status = bf\core\Status::status();
 		$app = $this->model->queryApp($param);
 		$app->list = $this->model->queryAppBuilds($param);
+		foreach ($app->list as $key => &$build) {
+			$build->download_url = $GLOBALS["relatvie_path"]."/app/build/download/".$build->id;
+		}
 		$status->data = $app;
 		return $status;
 	}
@@ -71,11 +74,12 @@ class AppHandler extends bf\core\HttpRequestHandler{
 		if (!empty($apps)) {
 			$app = $apps[0];
 		}
-		$fn = $app->name."-".$app->version.".".$app->build.".apk";
+		$fn = $app->name."-".(empty($app->channel)?"":$app->channel)."-".$app->version.".".$app->build.".apk";
+		$url = $app->download_url."?fn=$fn";
 		header('Content-type: application/vnd.android.package-archive');
 		header('Content-Disposition: attachment; filename="'.$fn.'"');
 		header( "HTTP/1.1 301 Moved Permanently" );
-    	header("Location: ".$app->download_url);
+    	header("Location: ".$url);
 		return null;
 	}
 }

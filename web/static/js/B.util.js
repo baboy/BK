@@ -583,7 +583,47 @@ String.prototype.json = function(){
 function _s(s){
 	return (s==null || s==undefined)?"":s;
 }
-
+var HashEventManager = function(){
+	this.events = {};
+};
+HashEventManager.getInstance = function(){
+	if (!window.hashEventManager) {
+		window.hashEventManager = new HashEventManager();
+		window.onhashchange = function(){
+			var h = window.location.hash;
+			h = h.substring(1);
+			HashEventManager.getInstance().fire(h);
+		};
+	};
+	return window.hashEventManager;
+};
+HashEventManager.prototype = {
+	addEventListener:function(hash,func){
+		this.events[hash] = func;
+	},
+	fire:function(hash){
+		if (!hash) {
+			hash = "_default_";
+		};
+		var p = hash.split("/");
+		var k = p[0];
+		p.splice(0,1);
+		console.log(this.events);
+		var func = this.events[k];
+		if (!func) {
+			k = "_default_";
+			func = this.events[k];
+		};
+		if (func) {
+			return func.apply(null,p);
+		};
+		console.log("fire:"+k+","+func);
+		/**
+		/edit/{module}/sid
+		
+		**/
+	}
+};
 /*****************/
 //用来保存全局数据（对象，函数）
 //如果是ajax轮循的话，最好也加入到全局中，可以多个地方调用

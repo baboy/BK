@@ -10,6 +10,7 @@
 	color:blue;
 	margin-right:20px;
 	cursor:pointer;
+	text-decoration: none;
 }
 .nh-top .nh-title{
 	height:100%;
@@ -20,7 +21,12 @@
 .nh-top .nh-title-item-right{
 	float:right;
 	vertical-align: middle;
-	margin:5px 20px;
+	margin:0px 20px 0;
+
+
+	color:blue;
+	cursor:pointer;
+	text-decoration: none;
 
 }
 .nh-top .nh-title-item-right button{

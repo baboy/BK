@@ -30,7 +30,7 @@ class App extends bf\core\Dao{
 			}
 			$where .= " $tab.$k=$v ";
 		}
-		$sql = "select app.name,app.package,build.channel,build.developer,build.version,build.description,build.download_url,build.build from wp_app app, wp_app_build build where app.id=build.appid and $where order by build.pubdate desc";
+		$sql = "select app.name,app.package,build.id,build.channel,build.developer,build.version,build.description,build.download_url,build.build from wp_app app, wp_app_build build where app.id=build.appid and $where order by build.pubdate desc";
 		$ret = $this->query($sql);
 		if (!empty($ret)) {
 			//$ret = objectToArray($ret);

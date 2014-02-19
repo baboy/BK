@@ -11,6 +11,9 @@ $(document).ready(function(){
 			options.global = true;
 		}
 	);
+	if( !document.getElementById("notice-board") ){
+
+	}
 	$(this).ajaxStart(function(){
 		$("#notice-board").show().html("正在载入...");
 	}).ajaxStop(function(){
@@ -139,6 +142,7 @@ NavigationHandler.prototype = {
 var NavigationPushView = function(nav, obj, width, height){
 	this.nav = nav;
 	this.obj = obj;
+	this.navBar = null;
 	this.container = document.createElement("div");
 	this.container.className = "nh-push-view";
 	this.container.setAttribute("role","push-view");
@@ -169,7 +173,7 @@ NavigationPushView.prototype = {
 		var handler = this;
 		var top = document.createElement("div");
 		top.className = "nh-top";
-
+		this.navBar = top;
 		var backBtn = document.createElement("div");
 		backBtn.className = "nh-back";
 		backBtn.innerHTML = " <返回 ";
@@ -206,8 +210,14 @@ NavigationPushView.prototype = {
 		this.obj.push = function(obj){
 			this.nav.push(obj);
 		};
+		this.obj.setNavBarVisible = function(flag){
+			handler.setNavBarVisible(flag);
+		}
 		this.obj.nav = this.nav;
 
+	},
+	setNavBarVisible:function(flag){
+		this.navBar.style.display = flag?"block":"none";
 	},
 	setTitle:function(title){
 		this.titleContainer.innerHTML = title;

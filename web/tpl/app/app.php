@@ -115,36 +115,6 @@
 			}
 		</style>
 		<style>
-			.nh-top{
-				height:40px;
-				line-height: 40px;
-				border-bottom: 1px solid #ccc;
-				background1: #fefefe;
-			}
-			.nh-top .nh-back{
-				float:left;
-				height:100%;
-				color:blue;
-				margin-right:20px;
-				cursor:pointer;
-			}
-			.nh-top .nh-title{
-				height:100%;
-				text-align: left;
-				padding-left: 10px;
-				vertical-align: middle;
-			}
-			.nh-top .nh-title-item-right{
-				float:right;
-				vertical-align: middle;
-				margin:5px 20px;
-
-			}
-			.nh-top .nh-title-item-right button{
-				height:30px;
-			}
-			.nh-push-view{
-			}
 		</style>
 		<style>
 			a {
@@ -211,23 +181,6 @@
 				padding:10px  0  10px 150px;
 			}
 		</style>
-		<script>
-			window.onload = function(){
-				var addBtn = document.createElement("button");
-				addBtn.innerHTML = "Add";
-				var appDiv = document.createElement("div");
-				var nav = new NavigationHandler("app-content");
-				nav.push(appDiv);
-				appDiv.setTitle("App Management");
-				appDiv.setRightItem(addBtn);
-
-				window.appHandler = new AppHandler(appDiv);
-				appHandler.showProducts();
-				addBtn.onclick = function(){
-					appHandler.toggleAddForm();
-				}
-			}
-		</script>
 	</head>
 	<body>
 		<div id="container">
