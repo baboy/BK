@@ -1,7 +1,7 @@
 <?php
-namespace bf\core;
+namespace bk\core;
 
-class BFObjectManager{
+class BKObjectManager{
 	public $objects = array();
 	public $aop = array();
 
@@ -45,7 +45,7 @@ class BFObjectManager{
 	static function getInstance($config=null){
 		global $_objectManager;
 		if (!$_objectManager) {
-			$_objectManager = new BFObjectManager($config);
+			$_objectManager = new BKObjectManager($config);
 		}
 		return $_objectManager;
 	}
@@ -60,7 +60,7 @@ class BFObjectManager{
 			return null;
 		}
 		$objConf = $this->objects[$class];
-		$obj = new BFObjectProxy( $objConf, $this->aop);
+		$obj = new BKObjectProxy( $objConf, $this->aop);
 
 		return $obj;
 	}
@@ -73,7 +73,7 @@ class BFObjectManager{
 * 动态代理类，当调用在context中配置的对象时，都将通过代理
 * 当在aop 中配置了改对象的切点时，proxy将自动在各个切点调用代理
 */
-class BFObjectProxy{
+class BKObjectProxy{
 	public $file = null;
 	public $class = null;
 	public $action = null;
@@ -133,7 +133,7 @@ class BFObjectProxy{
 		for ($i=0, $n = count($aspects); $i < $n; $i++) { 
 			$aspect = $aspects[$i];
 			$action = $aspect["action"];
-			$obj = new BFObjectProxy($aspect, $this->aop);
+			$obj = new BKObjectProxy($aspect, $this->aop);
 			$obj->$action();
 		}
 	}

@@ -1,5 +1,5 @@
 <?php
-namespace bf\core;
+namespace bk\core;
 class Model{
 	function __construct($config = null){
 		$this->config = $config;

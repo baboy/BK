@@ -1,5 +1,5 @@
 <?php
-namespace bf\core;
+namespace bk\core;
 
 class Status{
 	public $status = self::SuccessCode;

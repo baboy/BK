@@ -1,5 +1,15 @@
 <?php
-namespace bf\core;
+namespace bk\core;
+
+
+$path_prefix = "/bk";
+$relatvie_path = "";
+$site_url = "http://".$_SERVER["HTTP_HOST"];
+$server_port = $_SERVER["SERVER_PORT"];
+if (intval($server_port)!=80) {
+	$site_url .= ":$server_port";
+}
+
 class ApplicationContext{
 	protected $config = array();
 	protected $router = null;
@@ -12,9 +22,9 @@ class ApplicationContext{
 			return;
 		}
 		$this->config = $config;
-		$this->router = new BFRouteManager($config->getRouteConfig() );
+		$this->router = new BKRouteManager($config->getRouteConfig() );
 		//$this->acl = $appConfig->getAcl();
-		$this->objectManager = new BFObjectManager($config->getContextConfig());
+		$this->objectManager = new BKObjectManager($config->getContextConfig());
 		$this->objectManager->loadObjects($config->getRouteConfig());
 		global $__DB__;
 		$__DB__ = new Dao($config->getSqlConfig());

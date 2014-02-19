@@ -1,6 +1,6 @@
 <?php
 
-class MediaHandler extends bf\core\HttpRequestHandler{
+class MediaHandler extends bk\core\HttpRequestHandler{
 	function init(){
 		//$this->getModel("Media");
 		global $media;
@@ -19,7 +19,7 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 			$param["node"] = "SERIAL";
 		}
 		$data = $this->model->query($param);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}
@@ -33,7 +33,7 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 	function detail($param){
 		$action = "query".ucfirst(strtolower($param["module"]))."Detail";
 		$data = $this->model->$action($param["sid"]);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		$status->param = $param;
 		$status->action = $action;
@@ -50,14 +50,32 @@ class MediaHandler extends bf\core\HttpRequestHandler{
 	}
 	function recent($param){
 		$data = $this->model->queryRecent($param["module"], empty($param["sid"]) ? null:$param["sid"],$param["count"]);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}
 	function queryRecommend($param){
 		$data = $this->model->queryRecommend();
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
+		return $status;
+	}
+	function queryCategoriesParam(){
+		$fields = array(
+				"module"=>array("type"=>"string")
+			);
+		return $fields;
+	}
+	function queryCategories($param){
+		$status = bk\core\Status::status();
+		$categories = $this->model->queryCategories($param);
+		foreach ($categories as $key => $cate) {
+			$cate->api = array(
+					"hot"=>$GLOBALS["site_url"]."/api/v1/news/query/",
+					"query"=>$GLOBALS["site_url"]."/api/v1/news/query/"
+				);
+		}
+		$status->data = $categories;
 		return $status;
 	}
 }

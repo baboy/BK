@@ -1,6 +1,6 @@
 <?php
 
-class AppVersionHandler extends bf\core\HttpRequestHandler{
+class AppVersionHandler extends bk\core\HttpRequestHandler{
 
 	function getModel($modelName){
 		if (empty($this->model)) {
@@ -25,7 +25,7 @@ class AppVersionHandler extends bf\core\HttpRequestHandler{
 	}
 	function update($param){
 		$app = $this->model->queryLastVersion($param["package"], empty($param["channel"]) ? null : $param["channel"],"publish");
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$data = array("role"=>0, "msg"=>"没有可更新的版本!", "version"=>$param["version"], "build"=>$param["build"]);
 		if (!empty($app) && $app->version > $param["version"]) {
 			$data["role"] = 10;

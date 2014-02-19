@@ -1,5 +1,5 @@
 <?php
-class EditHandler extends bf\core\HttpRequestHandler{
+class EditHandler extends bk\core\HttpRequestHandler{
 	function init(){
 		//$this->getModel("Media");
 	}
@@ -10,7 +10,7 @@ class EditHandler extends bf\core\HttpRequestHandler{
 		return $fields;
 	}
 	function load($param){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $param;
 		return $status;
 	}

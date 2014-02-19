@@ -1,12 +1,12 @@
 <?php
-namespace bf\core;
+namespace bk\core;
 
 $dir = dirname(__file__);
 require_once $dir."/../lib/function.php";
 require_once $dir."/ApplicationContext.php";
-require_once $dir."/BFObjectManager.php";
-require_once $dir."/BFRouteManager.php";
-require_once $dir."/BFAcl.php";
+require_once $dir."/BKObjectManager.php";
+require_once $dir."/BKRouteManager.php";
+require_once $dir."/BKAcl.php";
 require_once $dir."/Dao.php";
 require_once $dir."/Model.php";
 require_once $dir."/status.php";

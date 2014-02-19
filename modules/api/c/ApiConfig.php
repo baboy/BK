@@ -1,5 +1,5 @@
 <?php
-class ApiConfigHandler extends bf\core\HttpRequestHandler{
+class ApiConfigHandler extends bk\core\HttpRequestHandler{
 	function config(){
 		$conf = array(
 
@@ -62,7 +62,7 @@ class ApiConfigHandler extends bf\core\HttpRequestHandler{
 					)
 				)
 				);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $conf;
 		return $status;
 

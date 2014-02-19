@@ -1,5 +1,5 @@
 <?php
-namespace bf\core\database;
+namespace bk\core\database;
 require_once 'database.inc';
 
 class DB{

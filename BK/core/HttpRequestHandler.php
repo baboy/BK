@@ -1,5 +1,5 @@
 <?php
-namespace bf\core;
+namespace bk\core;
 class HttpRequestHandler{
 	protected $model;
 	function getModel($modelName){

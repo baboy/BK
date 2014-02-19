@@ -194,6 +194,10 @@ class ContentGrabber( HTMLParser):
 				attachment["metadata"] = meta
 				attachment["sid"] = sid
 				attachment["description"] = img.get("title") if img.has_key("title") else img.get("alt")
+				if(i == 0):
+					print attachment
+					updateParam = {"thumbnail":img["src"], "pic":img["src"]}
+					self.db.update(updateParam,{"id":sid});
 				
 				src = img["src"]
 				m = md5.new()

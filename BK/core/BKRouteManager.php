@@ -1,7 +1,7 @@
 <?php
-namespace bf\core;
+namespace bk\core;
 
-class BFRouteManager{
+class BKRouteManager{
 	public $routes = array();
 	function __construct($config = null){
 
@@ -11,13 +11,13 @@ class BFRouteManager{
 		for ($i=0, $n = count($config); $i < $n ; $i++) { 
 			$routeConf = $config[$i];
 			$path = $routeConf["path"];
-			$this->routes[$path] = new BFRoute($routeConf);
+			$this->routes[$path] = new BKRoute($routeConf);
 		}
 	}
 	static function getInstance($config=null){
 		global $_routeManager;
 		if (!$_routeManager) {
-			$_routeManager = new BFRouteManager( $config);
+			$_routeManager = new BKRouteManager( $config);
 		}
 		return $_routeManager;
 	}
@@ -65,7 +65,7 @@ class BFRouteManager{
 		return false;
 	}
 }
-class BFRoute{
+class BKRoute{
 	public $path = null;
 
 	public $class = null;

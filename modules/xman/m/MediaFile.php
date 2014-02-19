@@ -2,7 +2,7 @@
 
 define('TABLE_MEDIA_FILE', 'media_file');
 
-class MediaFile extends bf\core\Model{
+class MediaFile extends bk\core\Model{
 	
 	function add($param){
 		//$sql = $this->getInsertSql(TABLE_MEDIA_FILE, $param);

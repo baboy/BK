@@ -2,7 +2,7 @@
 
 define("TABLE_APP", "app");
 define("TABLE_APP_BUILD", "app_build");
-class App extends bf\core\Dao{
+class App extends bk\core\Dao{
 	function registerApp($param){
 		$ret = $this->insert(TABLE_APP, $param);
 		return $ret;

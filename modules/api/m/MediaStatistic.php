@@ -1,6 +1,6 @@
 <?php
 
-class MediaStatistic extends bf\core\Model{
+class MediaStatistic extends bk\core\Model{
 	function view($sid){
 		$sid = addslashes($sid);
 		$sql = "UPDATE wp_media set views=views+1 WHERE id=$sid";

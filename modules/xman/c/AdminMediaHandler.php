@@ -1,6 +1,6 @@
 <?php
 
-class AdminMediaHandler extends bf\core\HttpRequestHandler{
+class AdminMediaHandler extends bk\core\HttpRequestHandler{
 	function init(){
 		global $media;
 		$this->model = $media;
@@ -18,7 +18,7 @@ class AdminMediaHandler extends bf\core\HttpRequestHandler{
 			$param["node"] = "SERIAL";
 		}
 		$data = $this->model->query($param);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}
@@ -31,7 +31,7 @@ class AdminMediaHandler extends bf\core\HttpRequestHandler{
 	}
 	function detail($param){
 		$data = $this->model->queryDetail($param["sid"]);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}

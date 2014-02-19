@@ -1,6 +1,6 @@
 <?php
 
-namespace bf\core;
+namespace bk\core;
 
 function objectToArray($d) {
 	if (is_object($d)) {

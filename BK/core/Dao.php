@@ -1,6 +1,6 @@
 <?php
-namespace bf\core;
-use bf\core\database\DB as DB;
+namespace bk\core;
+use bk\core\database\DB as DB;
 include_once "database/db.inc";
 class Dao extends DB{
 	private $config = null;

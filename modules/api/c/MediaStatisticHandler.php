@@ -1,6 +1,6 @@
 <?php
 
-class MediaStatisticHandler extends bf\core\HttpRequestHandler{
+class MediaStatisticHandler extends bk\core\HttpRequestHandler{
 	function getModel($modelName){
 		if (empty($this->model)) {
 			require_once dirname(__FILE__)."/../m/$modelName.php";
@@ -19,6 +19,6 @@ class MediaStatisticHandler extends bf\core\HttpRequestHandler{
 	}
 	function view($param){
 		$this->model->view($param["sid"]);
-		return bf\core\Status::status();
+		return bk\core\Status::status();
 	}
 }

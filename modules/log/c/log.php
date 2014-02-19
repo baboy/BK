@@ -1,5 +1,5 @@
 <?php
-class LoggerHandler extends bf\core\HttpRequestHandler{
+class LoggerHandler extends bk\core\HttpRequestHandler{
 	
 	function getModel($modelName){
 		if (empty($this->model)) {
@@ -83,7 +83,7 @@ class LoggerHandler extends bf\core\HttpRequestHandler{
 		$ver = $deviceParam->data["version"];
 		$build = $deviceParam->data["build"];
 
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data["sno"] = $sno;
 		if(!empty($param["events"])){
 			$ids = array();

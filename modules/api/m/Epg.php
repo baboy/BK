@@ -1,5 +1,5 @@
 <?php
-class Epg extends bf\core\Model{
+class Epg extends bk\core\Model{
 	function getChannels(){
 		$sql = "select channelid,name,live_url,epg_api,cateid from wp_tvie_live ";
 		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_tvie_epg where start_time<%s and end_time>%s)e on e.channel_id=c.channelid";

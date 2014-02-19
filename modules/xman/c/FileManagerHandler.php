@@ -1,6 +1,6 @@
 <?php
 
-class FileManagerHandler extends bf\core\HttpRequestHandler{
+class FileManagerHandler extends bk\core\HttpRequestHandler{
 
 	function init(){
 		$this->getModel("MediaFile");
@@ -19,19 +19,19 @@ class FileManagerHandler extends bf\core\HttpRequestHandler{
 		return $fields;
 	}
 	function add($param){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$fid = $this->model->add($param);
 		if (empty($fid)){
-			return bf\core\Status::error();
+			return bk\core\Status::error();
 		}
 		$param["id"] = $fid;
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $param;
 		return $status;
 		
 	}
 	function update($param){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $this->model->update(array("a"=>"1","b"=>2), array("c"=>"3","d"=>4));
 		return $status;
 	}
@@ -43,12 +43,12 @@ class FileManagerHandler extends bf\core\HttpRequestHandler{
 		return $fields;
 	}
 	function query($param){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $this->model->query($param);
 		return $status;
 	}
 	function dirs(){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $this->model->query(array("node"=>"dir"));
 		return $status;
 	}

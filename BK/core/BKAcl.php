@@ -1,7 +1,7 @@
 <?php
-namespace bf\core;
+namespace bk\core;
 
-class BFAcl{
+class BKAcl{
 	private $roles = array();
 	static function getInstance($config){
 		if (empty($config)) {
@@ -10,7 +10,7 @@ class BFAcl{
 
 		global $_acl;
 		if (!$_acl) {
-			$_acl = new BFAcl( $config);
+			$_acl = new BKAcl( $config);
 		}
 
 		$roles = array();

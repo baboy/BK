@@ -1,5 +1,5 @@
 <?php
-class EpgHandler extends bf\core\HttpRequestHandler{
+class EpgHandler extends bk\core\HttpRequestHandler{
 	function init(){
 		$this->getModel("Epg");
 	}
@@ -14,7 +14,7 @@ class EpgHandler extends bf\core\HttpRequestHandler{
 		$t = time();
 		$param["start"] = dayStartTime($t-5*3600-24);
 		$data = $this->model->search($param);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}
@@ -26,7 +26,7 @@ class EpgHandler extends bf\core\HttpRequestHandler{
 						"server_time"=>time(),
 						"live_time_delay"=> 100, 
 						"channels"=>$channels);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}
@@ -42,13 +42,13 @@ class EpgHandler extends bf\core\HttpRequestHandler{
 		$param["end"] = dayEndTime($param["timestamp"]);
 		unset($param["timestamp"]);
 		$data = $this->model->getEpgs($param);
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}
 	function queryHotChannels(){
 		$data = $this->model->queryHotChannels();
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;
 	}

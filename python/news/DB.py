@@ -73,11 +73,12 @@ class DB:
 		return news
 	def hasContent(self,sid):
 		try:
+			print "hasContent:",sid
 			sql = "SELECT id FROM wp_media_content WHERE sid=%s"
 			ret = self.cursor.execute(sql,tuple(str(sid)))
 			self.conn.commit()
 		except Exception, e:
-			print "update:",e
+			print "hasContent:",e
 			ret = 0
 		return True if ret else False
 	def updateContent(self,content,sid):
@@ -91,7 +92,7 @@ class DB:
 			ret = self.cursor.execute(sql,tuple(p))
 			self.conn.commit()
 		except Exception, e:
-			print "update:",e
+			print "updateContent:",e
 			ret = 0
 		return True if ret > 0 else False
 	def update(self,param,cond):

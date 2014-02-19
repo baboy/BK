@@ -1,7 +1,7 @@
 <?php
 define('MEDIA', '');
 
-class Media extends bf\core\Model{
+class Media extends bk\core\Model{
 	/**
 	*	检索资源列表 只检索wp_media 表
 	*/
@@ -245,6 +245,15 @@ class Media extends bf\core\Model{
 			$media->$key = $value;
 		}
 		return $media;
+	}
+	function queryCategories($param){
+		$where = $this->getWhereSql($param);
+		$sql = "SELECT * FROM wp_media_category WHERE $where";
+		$cates = $this->db->query($sql);
+		return $cates;
+	}
+	function addCategory($param){
+
 	}
 }
 global $media;

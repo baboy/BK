@@ -1,5 +1,5 @@
 <?php
-class AppHandler extends bf\core\HttpRequestHandler{
+class AppHandler extends bk\core\HttpRequestHandler{
 	function init(){
 		$this->getModel("App");
 	}
@@ -11,12 +11,12 @@ class AppHandler extends bf\core\HttpRequestHandler{
 		return $fields;
 	}
 	function register(){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 
 		return $status;
 	}
 	function queryProduct(){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$status->data = $this->model->queryAppList(null);
 		return $status;
 	}
@@ -27,7 +27,7 @@ class AppHandler extends bf\core\HttpRequestHandler{
 		return $fields;
 	}
 	function queryBuilds($param){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$app = $this->model->queryApp($param);
 		$app->list = $this->model->queryAppBuilds($param);
 		foreach ($app->list as $key => &$build) {
@@ -51,10 +51,10 @@ class AppHandler extends bf\core\HttpRequestHandler{
 		return $fields;
 	}
 	function addBuild($param){
-		$status = bf\core\Status::status();
+		$status = bk\core\Status::status();
 		$id = $this->model->addAppBuild($param);
 		if (empty($id)) {
-			$status = bf\core\Status::error();
+			$status = bk\core\Status::error();
 			$status->error = $this->model->db->last_error;
 			return $status;
 		}

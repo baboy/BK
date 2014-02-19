@@ -1,6 +1,6 @@
 <?php
 
-class AppVersion extends bf\core\Model{
+class AppVersion extends bk\core\Model{
 	function queryLastVersion($package, $channel, $status){
 		$where = "app.package='$package'";
 		if (!empty($status))

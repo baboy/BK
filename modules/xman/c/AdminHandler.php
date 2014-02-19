@@ -1,5 +1,5 @@
 <?php
-class AdminHandler extends bf\core\HttpRequestHandler{
+class AdminHandler extends bk\core\HttpRequestHandler{
 	function init(){
 		//$this->getModel("App");
 	}
