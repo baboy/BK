@@ -141,12 +141,31 @@ var NavigationPushView = function(nav, obj, width, height){
 	this.obj = obj;
 	this.container = document.createElement("div");
 	this.container.className = "nh-push-view";
+	this.container.setAttribute("role","push-view");
 	this.titleContainer = null;
 	this.contentContainer = null;
 	this.init();
+	this.createFrame();
 }
 NavigationPushView.prototype = {
 	init:function(){
+		var handler = this;
+		this.container.onclick = function(evt){
+			evt = evt ? evt: window.event;
+            var obj = evt.srcElement ? evt.srcElement:evt.target;
+            var role = obj.getAttribute("role");
+            if(!role)
+            	return false;
+            switch(role){
+            	case "push-back":{
+            		handler.nav.pop();
+            		break;
+            	}
+            }
+
+		}
+	},
+	createFrame:function(){
 		var handler = this;
 		var top = document.createElement("div");
 		top.className = "nh-top";
