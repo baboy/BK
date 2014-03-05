@@ -58,8 +58,8 @@ class DB:
 			print "add item exception:", e
 			rowid = 0
 		return rowid
-	def addAttr(self,sid,key,val):
-		sql = "insert into wp_media_attr(sid,`key`,`value`) values(%s,%s,%s)"
+	def addAttr(self,sid,key,val,group):
+		sql = "insert into wp_media_attr(sid,`key`,`value`,`group`) values(%s,%s,%s,%s)"
 		param = (str(sid),key,str(val))
 		rowid = 0
 		try:
@@ -110,9 +110,15 @@ class DB:
 		content = a.get("content") if a.get("serial_content") is None else a.get("serial_content")
 		if content:
 			self.update({"summary":content},{"reference_id":a["reference_id"]})
-		global SQL_ADD_VIDEO
-		sid = str(a.get("sid"))
 
+		sid = str( a.get("sid") )
+		sql = "insert into wp_media_video(sid,thumbnail,pic,thumbnail_hor,pic_hor,m3u8,sd,high,super,original,mp4,duration,content,reference_id, page_url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+		fields = ["thumbnail","thumbnail_hor","pic_hor","sd","high","super","original","mp4","duration","reference_id","page_url"]
+		for i in xrange(1,10):
+			k = fields[i]
+			self.addAttr(sid, k, a.get(k),None)
+			
 		param = (sid,
 				a.get("thumbnail"),
 				a.get("pic"),
@@ -130,7 +136,7 @@ class DB:
 				a.get("page_url"))
 		rowid = 0
 		try:
-			self.cursor.execute(SQL_ADD_VIDEO, param)
+			self.cursor.execute(sql, param)
 			self.conn.commit()
 			rowid = self.cursor.lastrowid
 		except Exception, e:
@@ -209,6 +215,7 @@ class DB:
 			else:
 				t |= (1<<(tid-1))
 		return t
+	
 
 	def getMediaSid(self,cond):
 		param = []

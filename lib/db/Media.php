@@ -163,6 +163,9 @@ class Media extends bk\core\Model{
 			return null;
 		}
 		$html = $media->content;
+		//test video
+		$html = "<!--{VIDEO-0}-->".$html;
+
 		$images = $this->parseImages($html);
 		foreach ($images as $key => &$item) {
 			$html = str_replace($item["tag"], $item["placeholder"], $html);
@@ -173,6 +176,15 @@ class Media extends bk\core\Model{
 		if (!empty($images)) {
 			$attachements["images"] = $images;
 		}
+		//test
+		$video = array(
+				"index"=>0,
+				"thumbnail"=>"http://static.cnbetacdn.com/newsimg/2014//0218/30_1j0J1m4kn.jpg_w600.jpg",
+				"src"=>"http://data.vod.itc.cn/?new=/189/162/KpaGAARfWIt9OPxIxaGJ05.mp4&plat=3&mkey=dH_OdlaXVpud-ZfE-gHil5zOUIFXs6wh",
+				"placeholder"=>"<!--{VIDEO-0}-->"
+			);
+		$attachements["videos"] = array($video);
+
 		if (!empty($attachements)) {
 			$media->attachements = $attachements;
 		}

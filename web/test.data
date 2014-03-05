@@ -14,7 +14,38 @@
   name=iBox&product_id=iBox&package=com.tvie.ibox&version=1.3&channel=cibn&build=9527&developer=刘海涛&description=直播App
 
 
+sudo dd bs=4m if=2014-01-07-wheezy-raspbian.img of=/dev/rdisk1 
 
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+#
+## The primary network interface
+auto eth0
+iface eth0 inet static
+address 10.33.2.69
+gateway 10.33.0.1
+netmask 255.255.0.0
+network 10.33.0.0
+broadcast 10.33.0.255
+
+sudo dd if=/dev/zero of=swapfile bs=1M count=128
+sudo mkswap /var/swapfile
+useradd -g 1000 -m -r baboy
+15910912402
+13911285400
+备份
+sudo dd bs=1m if=/dev/disk1s1 of=boot.img
+sudo dd bs=4m if=/dev/disk1s2 of=raspbian.img 
+
+恢复 安装
+sudo dd bs=1m if=boot.img of=/dev/disk1s1
+sudo dd bs=4m if=raspbian.img of=/dev/disk1s2
+
+rtmp://10.33.0.50/live/xchannel/
 
 
 drop table wp_media_content;

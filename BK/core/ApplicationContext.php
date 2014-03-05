@@ -67,7 +67,11 @@ class ApplicationContext{
 				echo json_encode($param);
 				return;
 			}
-			$param = $param->data;
+			if (!empty($param) && !empty($param->data)){
+				$param = $param->data;
+			}else{
+				$param = null;
+			}
 		}
 		if (empty($param) && empty($fields)) {
 			$param = $_GET;

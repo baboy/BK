@@ -17,7 +17,7 @@
 			<tr class='row-input' role='add' style='display:none' id="addProduct">
 				<td colspan='5'>
 					<div class='div-input'>
-						<form action="/app/register" method="post">
+						<form action="/app/register" method="post" onsubmit="return false">
 							<div><label>Product Name</label><input type='text' name='name'/></div>
 							<div><label>Package</label><input type='text' name='package'/></div>
 							<div><label>Developer:</label><input type='text' name='developer'/></div>

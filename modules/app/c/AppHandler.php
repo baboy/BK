@@ -7,12 +7,17 @@ class AppHandler extends bk\core\HttpRequestHandler{
 		return null;
 	}
 	function registerParam(){
-		$fields = array();
+		$fields = array(
+				"name"=>array("type"=>"string"),
+				"package"=>array("type"=>"string"),
+				"developer"=>array("type"=>"string")
+			);
 		return $fields;
 	}
-	function register(){
+	function register($param){
 		$status = bk\core\Status::status();
-
+		$this->model->registerApp($param);
+		$status->data = $param;
 		return $status;
 	}
 	function queryProduct(){

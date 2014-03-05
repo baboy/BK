@@ -624,6 +624,19 @@ HashEventManager.prototype = {
 		**/
 	}
 };
+
+var Validator = function (){}
+Validator.getInstance = function(){
+	if(!Validator._instance_){
+		Validator._instance_ = new Validator();
+	}
+	return Validator._instance_;
+}
+Validator.prototype = {
+	checkForm:function(){
+		return true;
+	}
+}
 /*****************/
 //用来保存全局数据（对象，函数）
 //如果是ajax轮循的话，最好也加入到全局中，可以多个地方调用

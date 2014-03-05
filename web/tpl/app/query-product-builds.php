@@ -18,7 +18,7 @@
 			<tr class='row-input' role='add' id="addBuild" style="display:none">
 				<td colspan='5'>
 					<div class='div-input'>
-						<form action="/app/add/build" method="post">
+						<form action="/app/add/build" method="post"  onsubmit="return false">
 							<div><label>Product Name</label><span><?=$data->name?></span></div>
 							<div><label>Package</label><span><?=$data->package?></span></div>
 							<div><label>channel:</label><input type='text' name='channel'/></div>
