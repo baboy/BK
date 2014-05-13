@@ -48,15 +48,17 @@ class CNTVApi( HTMLParser):
 		data = json.loads(text)
 		channels = data.get("data").get("items")
 		for item in channels:
-			keyMap = {"icon":"channelImg","name":"title"}
+			keyMap = {"icon":"channelImg","name":"title","reference_url":"liveUrl"}
 			channel = {"rate":"300","source":"CNTV"};
 			for k in keyMap:
 				k2 = keyMap[k]
 				channel[k] = item.get(k2)
 			api = self.getLiveUrl(item.get("liveUrl"))
-			channel["live_url"] = api["iphone"]
+			channel["live_url"] = api.get("iphone")
 			rowid = self.db.addItem(channel);
 			print rowid
 
 parser = CNTVApi("http://serv.cbox.cntv.cn/json/zhibo/yangshipindao/ysmc/index.json")
+#parser = CNTVApi("http://serv.cbox.cntv.cn/json/zhibo/weishipindao/wsmc/index.json")
+#parser = CNTVApi("http://serv.cbox.cntv.cn/json/zhibo/difangpindao/dfmc/index.json")
 parser.parse()

@@ -8,7 +8,7 @@
 	<table>
 		<thead>
 			<th style="width:100px">Name</th>
-			<th style="width:200px">Package</th>
+			<th style="width:200px">Product</th>
 			<th style="width:100px">Developer</th>
 			<th>Description</th>
 			<th style="width:100px">Action</th>
@@ -19,7 +19,7 @@
 					<div class='div-input'>
 						<form action="/app/register" method="post" onsubmit="return false">
 							<div><label>Product Name</label><input type='text' name='name'/></div>
-							<div><label>Package</label><input type='text' name='package'/></div>
+							<div><label>Product</label><input type='text' name='product_id'/></div>
 							<div><label>Developer:</label><input type='text' name='developer'/></div>
 							<div class='div-submit'><button role='add-product' class='submit'>Submit</button></div>
 						</form>
@@ -33,7 +33,7 @@
 			?>
 			<tr style='background:<?=$bgColor?>'>
 				<td><span role="view-detail" data='<?=json_encode($item)?>'><?=_s($item->name)?></span></td>
-				<td><?=_s($item->package)?></td>
+				<td><?=_s($item->product_id)?></td>
 				<td><?=_s($item->developer)?></td>
 				<td class="desc"><?=_s($item->description)?></td>
 				<td class='row-action'>

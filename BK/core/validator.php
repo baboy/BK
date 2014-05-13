@@ -30,7 +30,7 @@ class Validator{
 			$alias = isset($v["alias"]) ? $v["alias"] : false;
 			$val = $this->getRequestValueByConfig($k, $v);
 			if (empty($val) && $alias) {
-				$val2 = $this->getRequestValueByConfig($alias, $arr[$alias]);
+				$val2 = $this->getRequestValueByConfig($alias, $v);
 				if (!empty($val2)) {
 					$val = $val2;
 				}

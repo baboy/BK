@@ -3,6 +3,9 @@ namespace bk\core;
 
 $dir = dirname(__file__);
 require_once $dir."/../lib/function.php";
+require_once $dir."/../lib/curl.php";
+require_once $dir."/../lib/thumbnail.php";
+require_once $dir."/../lib/ukey.php";
 require_once $dir."/ApplicationContext.php";
 require_once $dir."/BKObjectManager.php";
 require_once $dir."/BKRouteManager.php";

@@ -73,11 +73,8 @@ class SohuVideoParser( ):
 				item[k] = v
 		item["sid"] = sid
 		print item.get("original")
-		vid = self.db.addVideo(item)
-		if vid >0 :
-			print "add video m3u8 vid:",vid,item["reference_id"]
-		else :
-			print "add video m3u8 error"
+		self.db.addVideo(item)
+
 	
 	def download_page(self,page):
 		print "page:",page

@@ -1,8 +1,8 @@
 <?php
 
 class AppVersion extends bk\core\Model{
-	function queryLastVersion($package, $channel, $status){
-		$where = "app.package='$package'";
+	function queryLastVersion($product_id, $channel,$platform, $status){
+		$where = "app.product_id='$product_id'";
 		if (!empty($status))
 			$where .= " AND build.status='$status'";
 		if ($channel) {
@@ -10,7 +10,10 @@ class AppVersion extends bk\core\Model{
 		}else{
 			$where .= " AND build.channel is NULL";
 		}
-		$sql = "select app.*,build.build,build.version,build.download_url "
+		if($platform){
+			$where .= " AND build.platform='$platform'";
+		}
+		$sql = "select app.*,build.build,build.version,build.download_url,build.link "
 			. "from wp_app app,wp_app_build build "
 			. "where $where and build.appid=app.id order by build.version desc, build.build desc limit 0,1";
 		$app = $this->db->query($sql);

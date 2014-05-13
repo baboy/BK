@@ -1,12 +1,12 @@
 <?php
 class Epg extends bk\core\Model{
 	function getChannels(){
-		$sql = "select channelid as channel_id,name,live_url,epg_api,cateid from wp_tvie_live ";
-		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_tvie_epg where start_time<%s and end_time>%s)e on e.channel_id=c.channel_id";
+		$sql = "select order_no,channel_id,icon,type,name,live_url,epg_api,cate_id from wp_channel order by cate_id asc, channel_id asc";
+		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_epg where start_time<%s and end_time>%s group by channel_id)e on e.channel_id=c.channel_id";
 		$t = time();
 		$t = "$t";
 		$sql = sprintf($sql,$t,$t);
-		$sql = "select t.*,cat.name as cate_name,cat.icon as cate_icon from ($sql) t left join wp_tvie_category cat on cat.id=t.cateid order by cat.order_no asc, cat.id asc";
+		$sql = "select t.*,cat.name as cate_name,cat.icon as cate_icon from ($sql) t left join wp_category cat on cat.id=t.cate_id order by cat.order_no asc, cat.id asc,t.order_no asc";
 		//echo $sql;
 		//return $sql;
 		$rows = $this->db->query($sql);
@@ -29,7 +29,7 @@ class Epg extends bk\core\Model{
 					unset($row->$k2);
 				}
 				$row->live_epg = $epg;
-				$fields = array("name"=>"cate_name", "icon"=>"cate_icon", "id"=>"cateid");
+				$fields = array("name"=>"cate_name", "icon"=>"cate_icon", "id"=>"cate_id");
 				$cate = new stdClass();
 				foreach($fields as $k=>$k2){
 					$cate->$k = $row->$k2;
@@ -57,7 +57,7 @@ class Epg extends bk\core\Model{
 			return null;
 		}
 		$channelid = $param["channel_id"];
-		$sql = "select * from wp_tvie_epg where channel_id=%s ";
+		$sql = "select * from wp_epg where channel_id=%s ";
 		$where = null;
 		if (!empty($param["start"]) && !empty($param["end"])) {
 			$where = " AND start_time > %s AND start_time < %s";
@@ -69,11 +69,12 @@ class Epg extends bk\core\Model{
 		return $rows;
 	}
 	function searchChannel($s=false){
-		$sql = "select channelid as channel_id,name,live_url,epg_api,cateid from wp_tvie_live ";
+		$sql = "select channel_id,name, icon,live_url,type,epg_api,cate_id from wp_channel ";
 		if(!empty($s)){
 			$sql .= sprintf(" where name like '%%%%%s%%%%'" ,addslashes($s));
 		}
-		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_tvie_epg where start_time<%s and end_time>%s)e on e.channel_id=c.channel_id";
+		$sql .= " order by order_no asc, channel_id asc ";
+		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_epg where start_time<%s and end_time>%s)e on e.channel_id=c.channel_id";
 		$t = time();
 		$t = "$t";
 		$sql = sprintf($sql,$t,$t);
@@ -101,10 +102,10 @@ class Epg extends bk\core\Model{
 		if (empty($param["start"])) {
 			$param["start"] = time();
 		}
-		$sql = "select e.*, DATE_FORMAT(FROM_UNIXTIME(e.start_time),'%%Y-%%m-%%d') as d from wp_tvie_epg e where e.start_time > %s and e.name like '%%%s%%'  order by d asc,e.start_time asc";
-		$sql = "select t.*,live.name as channel_name,live.channelid as channel_id,live.type as channel_type,live.icon,live.epg_api,live.live_url "
+		$sql = "select e.*, DATE_FORMAT(FROM_UNIXTIME(e.start_time),'%%Y-%%m-%%d') as d from wp_epg e where e.start_time > %s and e.name like '%%%s%%'  order by d asc,e.start_time asc";
+		$sql = "select t.*,live.name as channel_name,live.channel_id,live.type as channel_type,live.icon,live.epg_api,live.live_url "
 			. "from ($sql) t "
-			. "left join wp_tvie_live live on live.channelid=t.channel_id";
+			. "left join wp_channel live on live.channel_id=t.channel_id";
 		$sql = sprintf($sql,addslashes($param["start"]), addslashes($param["s"]));
 		//echo $sql;
 		$rows = $this->db->query($sql);
@@ -149,7 +150,7 @@ class Epg extends bk\core\Model{
 		$where = "e.channel_id=".implode(" OR e.channel_id=",$ids);
 		$t = time();
 		$where = "(e.start_time > $t AND e.start_time<($t+3600*10)) AND ($where)";
-		$sql = "select e.* from wp_tvie_epg e where $where order by e.start_time asc";
+		$sql = "select e.* from wp_epg e where $where order by e.start_time asc";
 		$sql= "select * from ($sql) t group by channel_id";
 		$sql = sprintf($sql,$t,$t);
 		//echo $sql;
@@ -158,8 +159,8 @@ class Epg extends bk\core\Model{
 		return $rows;
 	}
 	function queryHotChannels(){
-		$sql = "select icon,type, channelid as channel_id,name,live_url,epg_api,cateid from wp_tvie_live where type='tv' limit 0,12";
-		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_tvie_epg where start_time<%s and end_time>%s)e on e.channel_id=c.channel_id";
+		$sql = "select icon,type, channel_id,name,live_url,epg_api,cate_id from wp_channel where type='tv' limit 0,12";
+		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_epg where start_time<%s and end_time>%s)e on e.channel_id=c.channel_id";
 		$t = time();
 		$t = "$t";
 		$sql = sprintf($sql,$t,$t);
@@ -210,8 +211,8 @@ class Epg extends bk\core\Model{
 	}
 
 
-	function queryChannelSource($channel_id){
-		$sql = "select icon,type, channelid as channel_id,name,live_url,epg_api from wp_tvie_live where channelid=$channel_id";
+	function queryChannelSourceList($channel_id){
+		$sql = "select icon,type, channel_id,name,live_url,epg_api from wp_channel where channel_id=$channel_id";
 		$channel = $this->db->query($sql);
 		if (!empty($channel)) {
 			$channel = $channel[0];
@@ -219,14 +220,30 @@ class Epg extends bk\core\Model{
 		$sources = array();
 		$source = array("source"=>"Lavatech","channel_id"=>$channel->channel_id, "icon"=>$channel->icon, "name"=>$channel->name, "live_url"=>$channel->live_url);
 		$sources[] = $source;
-		$sql = "select icon, source,name, channel_id,live_url from wp_live_channel_source where channel_id=$channel_id";
+		$sql = "select icon, source,name, channel_id,live_url,reference_url from wp_channel_live_source where channel_id=$channel_id";
 		$rows = $this->db->query($sql);
+		global $site_url;
 		foreach($rows as $i=>$row){
+			if($row->source == "CNTV"){
+				$row->live_url = $site_url."/api/v1/live/channel/source/url/?channel_id=".$row->channel_id."&source=".$row->source;
+			}
 			$sources[] = $row;
 		}
 
 		$channel->sources = $sources;
-
 		return $channel;
+	}
+	function queryChannelSource($channel_id, $source){
+		$sql = "select icon, source,name, channel_id,live_url,reference_url from wp_channel_live_source where channel_id=$channel_id AND source='$source'"; 
+		$rows = $this->db->query($sql);
+		$source = empty($rows) ? null:$rows[0];
+		return $source;
+	}
+	function addLog($param){
+		$ret = $this->db->insert("epg_log", $param);
+		return $ret;
+	}
+	function queryHotPrograms(){
+		
 	}
 }

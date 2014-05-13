@@ -84,7 +84,12 @@ class DB{
 		try {
 			$param = $this->checkParam($param);
 			$ret = db_insert($table)->fields($param)->execute();	
-		} catch (Exception $e) {
+		}
+		catch (\PDOException $e){
+			$ret = false;
+			$this->last_error = $e;
+		} 
+		catch (Exception $e) {
 			$ret = false;
 			$this->last_error = $e;
 		}

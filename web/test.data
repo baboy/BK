@@ -144,5 +144,23 @@ insert into wp_media_list(gid,`key`,`index`,value) values('serial','area',7,'泰
 insert into wp_media_list(gid,`key`,`index`,value) values('serial','area',8,'日剧');
 insert into wp_media_list(gid,`key`,`index`,value) values('serial','area',9,'其它');
 
+CREATE TABLE `wp_channels` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `order_no` float DEFAULT '0', 
+  `channel_id` varchar(32) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `icon` varchar(512) DEFAULT NULL,
+  `live_url` varchar(512) NOT NULL,
+  `epg_api` varchar(512) DEFAULT NULL,
+  `cateid` int(10) NOT NULL,
+  `type` char(10) NOT NULL DEFAULT 'tv' COMMENT 'tv  raido',
+  `status` int(1) DEFAULT '1', 
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `channelid` (`channelid`)
+) ENGINE=MyISAM AUTO_INCREMENT=379 DEFAULT CHARSET=utf8;
+
+URI
+http://tools.ietf.org/html/rfc3986
+
 
 

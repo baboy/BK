@@ -30,12 +30,30 @@ class App extends bk\core\Dao{
 			}
 			$where .= " $tab.$k=$v ";
 		}
-		$sql = "select app.name,app.package,build.id,build.channel,build.developer,build.version,build.description,build.download_url,build.build from wp_app app, wp_app_build build where app.id=build.appid and $where order by build.pubdate desc";
+		$sql = "select app.name,app.product_id,build.id,build.channel,build.developer,build.version,build.description,build.download_url,build.build from wp_app app, wp_app_build build where app.id=build.appid and $where order by build.pubdate desc";
 		$ret = $this->query($sql);
 		if (!empty($ret)) {
 			//$ret = objectToArray($ret);
 		}
 		return $ret;
+	}
+
+	function queryLatestAppBuild($param){
+		$where = null;
+		foreach($param as $k=>$v){
+			if(empty($where)){
+				$where = "";
+			}else{
+				$where .=" AND ";
+			}
+			$where .= " $k=$v ";
+		}
+		$sql = "select app.name,app.product_id,build.id,build.channel,build.developer,build.version,build.description,build.download_url,build.build from wp_app app, wp_app_build build where app.id=build.appid and $where order by build.pubdate desc limit 0, 1";
+		$ret = $this->query($sql);
+		if (!empty($ret)) {
+			//$ret = objectToArray($ret);
+		}
+		return empty($ret)?null:$ret[0];
 	}
 
 	function addAppBuild($param){

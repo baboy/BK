@@ -74,11 +74,11 @@ class DB:
 	def hasContent(self,sid):
 		try:
 			print "hasContent:",sid
-			sql = "SELECT id FROM wp_media_content WHERE sid=%s"
-			ret = self.cursor.execute(sql,tuple(str(sid)))
+			sql = "SELECT id FROM wp_media_content WHERE sid='"+str(sid)+"'"
+			ret = self.cursor.execute(sql)
 			self.conn.commit()
 		except Exception, e:
-			print "hasContent:",e
+			print "hasContent:",e, sql
 			ret = 0
 		return True if ret else False
 	def updateContent(self,content,sid):
@@ -136,7 +136,7 @@ class DB:
 		keys = param.keys()
 		s_keys = "`"+("`,`".join(keys))+"`"
 		placeholders = ["%s" for i in range(len(keys))]
-		sql = "insert into wp_media_attachment(%s) values(%s)" % (s_keys, ",".join(placeholders))
+		sql = "insert into wp_media_attr(%s) values(%s)" % (s_keys, ",".join(placeholders))
 		values = tuple(param.values())
 		rowid = 0
 		try:

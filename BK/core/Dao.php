@@ -23,7 +23,11 @@ class Dao extends DB{
 					$sql = str_replace("{".$key."}", $value, $sql);
 				}
 			}
-			$ret = $this->query($sql);
+			try{
+				$ret = $this->query($sql);
+			}catch(Exception $e){
+
+			}
 			return $ret;
 		}
 		return false;

@@ -2,20 +2,57 @@
 define('MEDIA', '');
 
 class Media extends bk\core\Model{
+	function queryAttrs($sids){
+		$sid = "(".implode(",", $sids).")";
+		$sql = "SELECT * FROM wp_media_attr t WHERE t.sid in $sid ";
+		$sql = sprintf($sql,addslashes($sid));
+		$rows = $this->db->query($sql);
+		$medias = array();
+		if (!empty($rows)) {
+			foreach ($rows as $key => $item) {
+				$sid = $item->sid;
+
+				$attrs = array();
+				if(isset($medias[$sid])){
+					$attrs = $medias[$sid];
+				}
+				$att = $item;
+				$attKey = $att->key;
+				$group = $item->group;
+				if ($group && !isset($attrs[$group])) {
+					$attrs[$group] = array();
+				}
+				$meta = $item->metadata;
+				if (!empty($meta)) {
+					$meta = json_decode($meta);
+				}
+				if (!empty($meta)) {
+					foreach ($meta as $key => $value) {
+						$att->$key = $value;
+					}
+				}
+				if (isset($att->metadata)) {
+					unset($att->metadata);
+					unset($att->original);
+				}
+				if ( isset($attrs[$group]) ) {
+					$attrs[$group][] = $att;
+				}else{
+					$attrs[$attKey] = $att;
+				}
+				$medias[$sid] = $attrs;
+			}
+		}
+		return $medias;
+	}
 	/**
 	*	检索资源列表 只检索wp_media 表
 	*/
-	function query($param){
+	function queryList($param){
 		$offset = empty($param["offset"])?0:intval($param["offset"]);
 		$count = empty($param["count"])?20:intval($param["count"]);
 		unset($param["offset"]);
 		unset($param["count"]);
-		/*
-		$fields = array("id as sid","title","tip","tag","thumbnail","pic","duration","score","views","actors","director","area","pubdate");
-		
-		$medias = $this->db->select("media",$fields,$param,array($offset,$count));
-		return $medias;
-		*/
 		$where = null;
 		foreach ($param as $key => $value) {
 			if (empty($where)) {
@@ -34,6 +71,23 @@ class Media extends bk\core\Model{
 		}
 		$sql = "SELECT t.id as sid,t.author,t.summary, t.title,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t $where order by id desc LIMIT $offset, $count";
 		$medias = $this->db->query($sql);
+		if($medias){
+			$sids = array();
+			foreach ($medias as $key => $media) {
+				$sids[] = $media->sid;
+			}
+			$attachments = $this->queryAttrs($sids);
+
+			foreach ($medias as $key => &$media) {
+				if(isset($attachments[$media->sid])){
+					$atts = $attachments[$media->sid];
+					foreach ($atts as $k => $v) {
+						$media->$k = $v;
+					}
+
+				}
+			}
+		}
 		return $medias ? $medias : null;
 	}
 	function querySerialVideos($gid){
@@ -62,10 +116,9 @@ class Media extends bk\core\Model{
 		if (empty($media)) {
 			return null;
 		}
-		$attachements = new stdClass();
 		if ( $media->module == "serial") {
 			$videos = $this->querySerialVideos($sid);
-			$attachements->videos = $videos;
+			$media->videos = $videos;
 		}else {
 			$video = new stdClass();
 			foreach(array("title","thumbnail","pic","sd","high","super","original","mp4") as $i=>$k){
@@ -74,41 +127,13 @@ class Media extends bk\core\Model{
 				}
 			}
 			if(!empty($video)){
-				$attachements->videos = array($video);
+				$media->videos = array($video);
 			}
 		}
-		$media->attachements = $attachements;
+		if(!empty($media->videos)){
+			//$media->attachements = array("videos"=>$media->videos);
+		}
 		return $media;
-	}
-	function queryAttachment($sid){
-		$sql = "SELECT t.* FROM wp_media_attachment t WHERE t.sid='$sid' ";
-		$rows = $this->db->query($sql);
-		$attachments = array();
-		if (!empty($rows)) {
-			foreach ($rows as $key => $item) {
-				$att = $item;
-				$type = $item->type;
-				if (!isset($attachments[$type])) {
-					$attachments[$type] = array();
-				}
-				$meta = $item->metadata;
-				if (!empty($meta)) {
-					$meta = json_decode($meta);
-				}
-				if (empty($meta)) {
-					$meta = array();
-				}
-				foreach ($meta as $key => $value) {
-					$att->$key = $value;
-				}
-				if (isset($att->metadata)) {
-					unset($att->metadata);
-					unset($att->original);
-				}
-				$attachments[$type][] = $att;
-			}
-		}
-		return $attachments;
 	}
 	function parseImages($html){
 		$re_img = '/<img\s[^>]*\/?>/';
@@ -141,24 +166,7 @@ class Media extends bk\core\Model{
 		return $images;
 	}
 	function queryNewsDetail($sid){
-		$sid = addslashes($sid);
-		/*
-		$sql = "SELECT m.id as sid, m.title, m.content,m.tip,m.tag,m.thumbnail,m.pic,m.score,m.views,m.actors,m.director,m.area,m.pubdate, v.sd, v.high, v.super, v.original, v.mp4 FROM wp_media m left join wp_media_video v on m.id = v.sid WHERE m.id='%s'";
-		$sql = sprintf($sql,addslashes($sid));
-		$medias = $this->db->query($sql);
-		return empty($medias)?null:$medias[0];
-		*/
-		$sql = "SELECT t.module, t.id as sid, t.title,t.summary,t.author,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t WHERE t.id=%s ";
-		$sql = "SELECT m.*,c.content FROM ($sql) m LEFT JOIN wp_media_content c ON m.sid=c.sid";
-
-		/*
-		$sql = "SELECT m.*, v.sd, v.high, v.super, v.original, v.mp4 "
-			. "FROM ($sql) m "
-			. "left join wp_media_video v on m.sid=v.sid";
-		*/
-		$sql = sprintf($sql,addslashes($sid));
-		$medias = $this->db->query($sql);
-		$media = empty($medias)?null:$medias[0];
+		$media = $this->queryDetail($sid);
 		if (empty($media)) {
 			return null;
 		}
@@ -172,9 +180,8 @@ class Media extends bk\core\Model{
 			unset($item["tag"]);
 		}
 		$media->content = $html;
-		$attachments = array();
 		if (!empty($images)) {
-			$attachements["images"] = $images;
+			$media->images = $images;
 		}
 		//test
 		$video = array(
@@ -183,27 +190,7 @@ class Media extends bk\core\Model{
 				"src"=>"http://data.vod.itc.cn/?new=/189/162/KpaGAARfWIt9OPxIxaGJ05.mp4&plat=3&mkey=dH_OdlaXVpud-ZfE-gHil5zOUIFXs6wh",
 				"placeholder"=>"<!--{VIDEO-0}-->"
 			);
-		$attachements["videos"] = array($video);
-
-		if (!empty($attachements)) {
-			$media->attachements = $attachements;
-		}
-		/*
-		if (!empty($media) && $media->total_count > 1) {
-			$videos = $this->querySerialVideos($sid);
-			$media->videos = $videos;
-		}else if(!empty($media)){
-			$video = new stdClass();
-			foreach(array("title","thumbnail","pic","sd","high","super","original","mp4") as $i=>$k){
-				if (!empty($media->$k)) {
-					$video->$k = $media->$k;
-				}
-			}
-			if(!empty($video)){
-				$media->videos = array($video);
-			}
-		}
-		*/
+		$media->videos = array($video);
 		return $media;
 	}
 	function queryRecent($module,$sid,$count){
@@ -230,22 +217,40 @@ class Media extends bk\core\Model{
 		$sql = sprintf($sql,addslashes($sid));
 		$rows = $this->db->query($sql);
 		$attrs = array();
-		for ($i=0, $n = count($rows); $i < $n; $i++) { 
-			$row = $rows[$i];
-			$attr = array();
-			$attr[($row->key)] = $row->value;
+		if (!empty($rows)) {
+			foreach ($rows as $key => $item) {
+				$att = $item;
+				$attKey = $att->key;
+				$group = $item->group;
+				if ($group && !isset($attrs[$group])) {
+					$attrs[$group] = array();
+				}
+				$meta = $item->metadata;
+				if (!empty($meta)) {
+					$meta = json_decode($meta);
+				}
+				if (!empty($meta)) {
+					foreach ($meta as $key => $value) {
+						$att->$key = $value;
+					}
+				}
+				if (isset($att->metadata)) {
+					unset($att->metadata);
+					unset($att->original);
+				}
+				if ( isset($attrs[$group]) ) {
+					$attrs[$group][] = $att;
+				}else{
+					$attrs[$attKey] = $att;
+				}
+			}
 		}
-
 		return $attrs;
 	}
 	function queryDetail($sid){
 		// table: media,content
 		$sql = "SELECT t.module, t.id as sid, t.title,t.summary,t.author,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t WHERE t.id=%s ";
 		$sql = "SELECT m.*,c.content FROM ($sql) m LEFT JOIN wp_media_content c ON m.sid=c.sid";
-
-		$sql = "SELECT m2.*,v.content, v.sd, v.high, v.super, v.original, v.mp4 "
-			. "FROM ($sql) m2 "
-			. "left join wp_media_video v on m2.sid=v.sid";
 		$sql = sprintf($sql,addslashes($sid));
 		$medias = $this->db->query($sql);
 		$media = empty($medias)?null:$medias[0];
@@ -253,6 +258,7 @@ class Media extends bk\core\Model{
 			return null;
 		}
 		$attrs = $this->queryAttr($sid);
+
 		foreach ($attrs as $key => $value) {
 			$media->$key = $value;
 		}

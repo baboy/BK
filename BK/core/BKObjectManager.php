@@ -76,7 +76,7 @@ class BKObjectManager{
 class BKObjectProxy{
 	public $file = null;
 	public $class = null;
-	public $action = null;
+	//public $action = null;
 	public $args = null; 
 	public $aop = null;
 	public $obj = null;
@@ -84,7 +84,7 @@ class BKObjectProxy{
 		if (!empty($data)) {
 			$this->file 	= isset($data["file"]) ? $data["file"] : $data["class"];
 			$this->class 	= $data["class"];
-			$this->action 	= $data["action"];
+			//$this->action 	= $data["action"];
 			$this->args 	= empty($data["args"])?null:$data["args"];
 		}
 		$this->aop = $aop;

@@ -175,6 +175,7 @@ class ContentGrabber( HTMLParser):
 			sid = item["id"]
 			page_url = item["page_url"]
 			page = Page()
+			print "url:",page_url
 			text = page.download(page_url).decode("utf-8")
 			doc = etree.HTML(text)
 			summary = self.parseSummary(doc)
@@ -190,7 +191,7 @@ class ContentGrabber( HTMLParser):
 				meta = json.dumps(img)
 				#meta = re.sub('"','\\"',meta)
 				#meta = re.sub("'","\\'",meta)
-				attachment = {"type":"image"}
+				attachment = {"group":"images"}
 				attachment["metadata"] = meta
 				attachment["sid"] = sid
 				attachment["description"] = img.get("title") if img.has_key("title") else img.get("alt")

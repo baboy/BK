@@ -10,9 +10,7 @@ sys.setdefaultencoding('utf-8')
 
 
 SQL_INSERT = "INSERT INTO wp_media (appid,module,node,title,actors,summary,thumbnail,pic,thumbnail_hor,pic_hor,reference_id,director,pubdate,area,duration,score,type,type_name,total_count,update_count) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-SQL_ADD_VIDEO= "insert into wp_media_video(sid,thumbnail,pic,thumbnail_hor,pic_hor,m3u8,sd,high,super,original,mp4,duration,content,reference_id, page_url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
-SQL_QUERY_RSSSOURCE = "SELECT category,source FROM cms_tvie_rss WHERE status='publish' "
 class DB:
 	def __init__(self):
 		self.conn = MySQLdb.connect(host=DBConstant.DB_HOST, user=DBConstant.DB_USER, passwd=DBConstant.DB_PWD, db=DBConstant.DB_NAME,charset="utf8")
@@ -26,7 +24,8 @@ class DB:
 	#@param a:article
 	def addItem(self,a):
 		global SQL_INSERT
-		t = self.getType("type", a.get("type","其它"))
+		cateNames = a.get("type","其它")
+		t = self.getType("type", cateNames)
 		area_id = self.getType("area", a.get("area","其它"))
 		summary = a.get("content") if a.get("serial_content") is None else a.get("serial_content")
 		param = (self.appid,
@@ -45,7 +44,7 @@ class DB:
 				str(area_id),
 				a.get("duration"),
 				a.get("score"),
-				str(t),
+				None,#str(t),
 				a.get("type"),
 				str(a.get("total_count")),
 				str(a.get("update_count")))
@@ -54,13 +53,16 @@ class DB:
 			self.cursor.execute(SQL_INSERT, param)
 			self.conn.commit()
 			rowid = self.cursor.lastrowid
+			#添加分类
+			self.addCategoryRelationWithCateName(cateNames,rowid);
 		except Exception, e:
 			print "add item exception:", e
 			rowid = 0
 		return rowid
 	def addAttr(self,sid,key,val,group):
+		print "addAttr: ",sid,key,val,group
 		sql = "insert into wp_media_attr(sid,`key`,`value`,`group`) values(%s,%s,%s,%s)"
-		param = (str(sid),key,str(val))
+		param = (str(sid),key,str(val) if val is not None else None,group)
 		rowid = 0
 		try:
 			self.cursor.execute(sql, param)
@@ -70,6 +72,7 @@ class DB:
 			print "add attr error",e
 			rowid = 0
 		return rowid
+	'''
 	def updateVideoContent(self,reference_id,content):
 		sql = "UPDATE wp_media_video set content=%s where reference_id=%s"
 		param = (content, reference_id )
@@ -82,6 +85,7 @@ class DB:
 			print "updateVideoContent exception:", e
 			rowid = 0
 		return rowid
+	'''
 	def update(self, param,cond):
 		keys = []
 		values = []
@@ -117,8 +121,8 @@ class DB:
 		fields = ["thumbnail","thumbnail_hor","pic_hor","sd","high","super","original","mp4","duration","reference_id","page_url"]
 		for i in xrange(1,10):
 			k = fields[i]
-			self.addAttr(sid, k, a.get(k),None)
-			
+			#self.addAttr(sid, k, a.get(k),None)
+		#return 0;
 		param = (sid,
 				a.get("thumbnail"),
 				a.get("pic"),
@@ -155,7 +159,7 @@ class DB:
 			print "addSerialVideo Error:", e
 			rowid = 0
 		return rowid
-
+	'''
 	def addSerial(self,a):
 		sql = "insert into wp_media_serial(title,summary,content,video_update_count,video_total_count,tip,reference_id) values(%s,%s,%s,%s,%s,%s,%s)"
 		param = (
@@ -177,6 +181,52 @@ class DB:
 			print "add Serial Exception:",e
 			rowid = 0
 		return rowid
+	'''
+	def addCategoryRelation(self, sid,cid):
+		sql = "insert into wp_media_category_relation(`sid`,`cid`) values(%s,%s)"
+		param = (str(sid), str(cid))
+		try:
+			print "addCategoryRelation:", param
+			self.cursor.execute(sql, param)
+			self.conn.commit()
+			
+		except Exception, e:
+			print "addCategoryRelation error:",e
+
+	def getCategoryId(self,value):
+		sql = "select id from wp_media_category where module=%s AND `name`=%s limit 0,1"
+		param = (self.module, value)
+		ret = None
+		try:
+			count = self.cursor.execute(sql, param)
+			if count > 0:
+				result = self.cursor.fetchone(); 
+				ret = result[0]
+			self.conn.commit()
+			
+		except Exception, e:
+			print "getCategoryId:",e
+			ret = None
+		return ret
+
+	def addCategoryRelationWithCateName(self,names,sid):
+		cates = self.getCategory(names)
+		print "cates:",cates
+		if cates is not None:
+			for cid in cates:
+				self.addCategoryRelation(sid,cid)
+	def getCategory(self,types):
+		if types:
+			a = types.split(";")
+		cates = []
+		for i in range(0, len(a) ):
+			type_name = a[i]
+			tid = self.getTypeId('type', type_name)
+			if tid is None:
+				print types,"select ", type_name, "error"
+			else:
+				cates.append(tid)
+		return cates
 	def getTypeId(self,key,value):
 		value = value.encode('utf-8')
 		value = value.strip()
@@ -189,6 +239,8 @@ class DB:
 		value = re.sub(r1,"",value)
 		if value == "其他":
 			value = "其它"
+		if key == "type":
+			return self.getCategoryId(value)
 		sql = "select `index` from wp_media_list where gid=%s AND `key`=%s AND value=%s limit 0,1"
 		param = (self.module, key, value)
 		ret = None
@@ -241,11 +293,11 @@ class DB:
 		self.cursor.close()
 		self.conn.close()
 
-#db = DB()
-#db.module = "movie"
-#types = "战争片;剧情片;传记片;历史片"
-#t = db.getType(types)
-#print t
+db = DB()
+db.module = "movie"
+types = "战争片;剧情片;传记片;历史片"
+t = db.getType("type",types)
+print t
 #print db.getMediaSid({"reference_id":360})
 #db.update({"summary":"xxx"},{"id":1})
 

@@ -11,14 +11,12 @@ class MediaHandler extends bk\core\HttpRequestHandler{
 				"module"=>array("type"=>"string"),
 				"offset"=>array("type"=>"int","default"=>0),
 				"count"=>array("type"=>"int","default"=>30),
+				"node"=>array("type"=>"string","default"=>"solo"),
 			);
 		return $fields;
 	}
 	function query($param){
-		if ($param["module"] == "serial") {
-			$param["node"] = "SERIAL";
-		}
-		$data = $this->model->query($param);
+		$data = $this->model->queryList($param);
 		$status = bk\core\Status::status();
 		$status->data = $data;
 		return $status;

@@ -1,33 +1,20 @@
 <?php
 class LoggerHandler extends bk\core\HttpRequestHandler{
-	
-	function getModel($modelName){
-		if (empty($this->model)) {
-			require_once dirname(__FILE__)."/../m/$modelName.php";
-			$this->model = new $modelName();
-		}
-		return $this->model;
-	}
 	function init(){
 		$this->getModel("AppLogger");
-	}
-	function logParam(){
-		$fields = array(
-				"data" => array("type"=>"json","name"=>"数据内容")
-			);
-		return $fields;
 	}
 	// device 参数
 	function logDeviceParam(){
 		$fields = array(
 				"appkey"=>array("type"=>"string"),
-				"package"=>array("type"=>"string"),
-				"product_id"=>array("type"=>"string","option"=>true),
+				"package"=>array("type"=>"string","option"=>true),
+				"product_id"=>array("type"=>"string","alias"=>"package"),
 				"build"=>array("type"=>"int"),
 				"version"=>array("type"=>"string"),
 				"device_id"=>array("type"=>"string"),
 				"mac"=>array("type"=>"string"),
 				"os"=>array("type"=>"string"),
+				"os_version"=>array("type"=>"string", "option"=>true),
 				"resolution"=>array("type"=>"string", "option"=>true),
 				"device_name"=>array("type"=>"string", "option"=>true),
 				"manufacturer"=>array("type"=>"string", "option"=>true),
@@ -44,7 +31,7 @@ class LoggerHandler extends bk\core\HttpRequestHandler{
 		$fields = array(
 				"event"=>array("type"=>"string"),
 				"group"=>array("type"=>"string"),
-				"element"=>array("type"=>"string"),
+				"element"=>array("type"=>"string","option"=>true),
 				"post_date"=>array("type"=>"string", "alias"=>"date"),
 			);
 		return $fields;
@@ -57,19 +44,25 @@ class LoggerHandler extends bk\core\HttpRequestHandler{
 			);
 		return $fields;
 	}
+	function logParam(){
+		$fields = array(
+				"data" => array("type"=>"json","name"=>"数据内容")
+			);
+		return $fields;
+	}
 	function log($param){
 		$param = $param["data"];
 		//检查device 参数
 		$deviceParam = $this->checkFields($this->logDeviceParam(),$param["device"]);
 		if(!$deviceParam->isSuccess())
 			return $deviceParam;
-		$device = $this->model->getUniqueDevice($deviceParam->data["appkey"],$deviceParam->data["device_id"],$deviceParam->data["package"]);
+		$device = $this->model->getUniqueDevice($deviceParam->data["appkey"],$deviceParam->data["device_id"]);
 		//如果没有注册，就注册设备
 		if(empty($device)){
 			$sno = $this->model->registerDevice($deviceParam->data);
 			if (empty($sno)) {
-				$status = Status::error();
-				$status->error = $this->model->last_error;
+				$status = bk\core\Status::error();
+				$status->error = $this->model->db->last_error;
 				return $status;
 			}
 			$device = $deviceParam->data;
@@ -87,7 +80,12 @@ class LoggerHandler extends bk\core\HttpRequestHandler{
 		$status->data["sno"] = $sno;
 		if(!empty($param["events"])){
 			$ids = array();
-			foreach ($param["events"] as $key => $value) {
+			foreach ($param["events"] as $key => $evt) {
+				$r = $this->checkFields($this->logEventsParam(),$evt);
+				if(!$r->isSuccess()){
+					continue;
+				}
+				$value = $r->data;
 				$value["sno"] = $sno;
 				$value["version"] = $ver;
 				$value["build"] = $build;
@@ -100,6 +98,8 @@ class LoggerHandler extends bk\core\HttpRequestHandler{
 				$event_id = $this->model->addEventLog($value);
 				if(!empty($event_id)){
 					$ids[] = $event_id;
+				}else{
+					$ids[] = $this->model->db->last_error;
 				}
 			}
 			$status->data["events"] = $ids;

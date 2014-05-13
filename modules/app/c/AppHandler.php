@@ -9,7 +9,7 @@ class AppHandler extends bk\core\HttpRequestHandler{
 	function registerParam(){
 		$fields = array(
 				"name"=>array("type"=>"string"),
-				"package"=>array("type"=>"string"),
+				"product_id"=>array("type"=>"string", "alias"=>"productId"),
 				"developer"=>array("type"=>"string")
 			);
 		return $fields;
@@ -47,16 +47,19 @@ class AppHandler extends bk\core\HttpRequestHandler{
 	function addBuildParam(){
 		$fields = array(
 				"appid"=>array("type"=>"int"),
+				"platform"=>array("type"=>"string","option"=>true),
 				"version"=>array("type"=>"string"),
 				"channel"=>array("type"=>"string"),
 				"build"=>array("type"=>"string"),
 				"description"=>array("type"=>"string"),
 				"download_url"=>array("type"=>"string"),
+				"link"=>array("type"=>"string","option"=>true),
 			);
 		return $fields;
 	}
 	function addBuild($param){
 		$status = bk\core\Status::status();
+
 		$id = $this->model->addAppBuild($param);
 		if (empty($id)) {
 			$status = bk\core\Status::error();
@@ -86,5 +89,22 @@ class AppHandler extends bk\core\HttpRequestHandler{
 		header( "HTTP/1.1 301 Moved Permanently" );
     	header("Location: ".$url);
 		return null;
+	}
+	//获取最新发布的版本 
+	function queryLatestVersionParam(){
+		$fields = array(
+				"app.product_id"=>array("type"=>"string"),
+				"build.status"=>array("type"=>"string","default"=>"publish"),
+				"build.channel"=>array("type"=>"string","option"=>true),
+			);
+		return $fields;
+	}
+	function queryLatestVersion($param){
+		$status = bk\core\Status::status();
+		$app = $this->model->queryLatestAppBuild($param);
+		
+		$status->data = $app;
+		return $status;
+
 	}
 }

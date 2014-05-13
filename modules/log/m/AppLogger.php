@@ -3,8 +3,8 @@ define("TABLE_DEVICE", "device");
 define("TABLE_EVENT", "event");
 define("TABLE_LOG", "log");
 class AppLogger extends bk\core\Model{
-	function getUniqueDevice($appkey,$device_id,$package){
-		$param = array("appkey"=>$appkey,"device_id"=>$device_id,"package"=>$package);
+	function getUniqueDevice($appkey,$device_id){
+		$param = array("appkey"=>$appkey,"device_id"=>$device_id);
 		$records = $this->db->select(TABLE_DEVICE, null, $param);
 		return count($records)>=1?objectToArray($records[0]):false;
 	}

@@ -1335,10 +1335,10 @@ abstract class Database {
 		array (
 			'default' => 
 				array (
-				  'database' => 'mcms',
-				  'username' => 'mcms',
-				  'password' => 'mcms',
-				  'host' => 'm.tvie.com.cn',
+				  'database' => 'app',
+				  'username' => 'BKer',
+				  'password' => 'I love you, baby!',
+				  'host' => '114.215.109.123',
 				  'port' => '3306',
 				  'driver' => 'mysql',
 				  'prefix' => 'wp_'

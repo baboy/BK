@@ -71,14 +71,18 @@ class BKRoute{
 	public $class = null;
 	public $action = null;
 	public $file = null;
+	public $getAction = null;
+	public $postAction = null;
 	function __construct( $data){
 		if (empty($data)) {
 			return;
 		}
 		$this->path = $data["path"];
 		$this->file = $data["file"];
-		$this->action = $data["action"];
+		$this->action = isset($data["action"]) ? $data["action"] : null;
 		$this->class = $data["class"];
+		$this->getAction = isset($data["getAction"]) ? $data["getAction"] : null;
+		$this->postAction = isset($data["postAction"]) ? $data["postAction"] : null;
 		$this->result = new \stdClass();
 
 		if ( !empty($data["result"])) {
@@ -92,21 +96,21 @@ class BKRoute{
 	}	
 	function match($path){
 		//$re = '/^((?:\/([a-zA-Z0-9-_]+))*)((?:\/(?:\{([a-zA-Z0-9_-]+)\}))*)/';
-		$re = "/\{([a-zA-Z0-9-_]*)\}/";
+		$re = '/\{([^\/]*)\}/';
 		$n = preg_match_all($re, $this->path, $keys);
 		if ($n>0) {
 			$placeholders = $keys[0];
 			$keys = $keys[1];
 			$re = $this->path;
 			for ($i=0,$n = count($placeholders); $i < $n; $i++) { 
-				$re = str_replace($placeholders[$i], "([a-zA-Z0-9-_]+)", $re);
+				$re = str_replace($placeholders[$i], '([^/]+)', $re);
 			}
 		}else{
 			return false;
 		}
-		$re = preg_replace("/\//","\\/",$re);
-		$re = "^$re$";
-		$n = preg_match("/$re/", $path, $values);
+		$re = preg_replace('/\//','\\/',$re);
+		$re = "/^".$re."$/";
+		$n = preg_match($re, $path, $values);
 		if ($n>0) {
 			$values = array_splice($values,1);
 			$param = array();

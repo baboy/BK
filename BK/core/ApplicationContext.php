@@ -10,6 +10,13 @@ if (intval($server_port)!=80) {
 	$site_url .= ":$server_port";
 }
 
+$ukey = requestValue("ukey");
+if( $ukey ){
+	$ucomp = \UserKey::getUserComponents($ukey);
+	$user = new \stdClass();
+	$user->uid = $ucomp["uid"];
+	$user->login_date = $ucomp["timestamp"];
+}
 class ApplicationContext{
 	protected $config = array();
 	protected $router = null;
@@ -52,6 +59,13 @@ class ApplicationContext{
 	function doAction($route){
 		$action = $route->action;
 		$class = $route->class;
+
+		$httpMethod = requestMethod();
+		if($httpMethod == "GET" && $route->getAction!=null){
+			$action = $route->getAction;
+		}else if($httpMethod == "POST" && $route->postAction!=null){
+			$action = $route->postAction;
+		}
 		//获取路由代理
 		$obj = $this->objectManager->getObjectProxy( $class );
 		$obj->db = $this->db;

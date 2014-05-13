@@ -1,0 +1,104 @@
+<?php
+header("location:http://175.155.13.135/mcms/xchannel/mod/vod/iBox.config.php");
+exit();
+$conf = array(
+	"background"=>"http://app.tvie.com.cn/static/images/background.png",
+	"splash"=>"http://app.tvie.com.cn/static/images/background.png",
+	"api"=>array(
+			"related"=>"http://app.tvie.com.cn/api/v1/movie/recent/query/",
+			"detail"=>"http://app.tvie.com.cn/api/v1/movie/detail/query/",
+			"views"=>"http://app.tvie.com.cn/api/v1/statistic/view/"
+		)
+	);
+$conf["modules"] = array(
+		//最左
+		array(
+			"id"=>"live",
+			"position"=>"0,0,0.2286,0.5",
+			"app"=>"com.tvie.ibox.live.mianyang",
+			"param"=>array(
+					"query_channels_api"=>"http://175.155.13.135/api/public/mcms/getLivelist"
+				),
+			"title"=>"直播",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/03/live.png",
+			"api"=>"http://app.tvie.com.cn/api/v1/serial/query/",
+			"filter"=>""
+		),
+		// 
+		array(
+			"id"=>"wenhuaxinxi",
+			"position"=>"0,0.5,0.2286,0.5",
+			"title"=>"文化信息",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/02/2009925122214308.jpg",
+			//"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
+			"api"=>"http://175.155.13.135/mcms/box/mod/vod/query.php?cid=21&num=30",
+			"filter"=>""
+		),
+		array(
+			"id"=>"wenhuayishu",
+			"position"=>"0.2286,0,0.3857,0.5",
+			"title"=>"文化艺术",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/02/whys.jpg",
+			//"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
+			"api"=>"http://175.155.13.135/mcms/box/mod/vod/query.php?cid=22&num=30",
+			"filter"=>""
+		),
+		// line2
+		array(
+			"id"=>"wenwubaohu",
+			"position"=>"0.6143,0,0.2,0.5",
+			"title"=>"文物保护",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/02/2012119103418926.jpg",
+			//"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
+			"api"=>"http://175.155.13.135/mcms/box/mod/vod/query.php?cid=23&num=30",
+			"filter"=>""
+		),
+
+		array(
+			"id"=>"youshengduwu",
+			"position"=>"0.8143, 0, 0.1857,0.5",
+			"title"=>"有声读物",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/02/xxxx1.jpg",
+			//"api"=>"http://app.tvie.com.cn/api/v1/movie/query/",
+			"api"=>"http://175.155.13.135/mcms/box/mod/vod/query.php?cid=24&num=30",
+			"filter"=>""
+		),
+		array(
+			"id"=>"shizhengyaowen",
+			"position"=>"0.2286,0.5,0.3,0.5",
+			"title"=>"时政要闻",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/02/01421_9505551.jpg",
+			"api"=>"http://175.155.13.135/mcms/box/mod/vod/query.php?cid=1&num=30",
+			"filter"=>""
+		),
+		array(
+			"id"=>"qunzhonghuodong",
+			"position"=>"0.5286,0.5,0.2357,0.5",
+			"title"=>"群众活动",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/02/10032335_272928.jpg",
+			"api"=>"http://175.155.13.135/mcms/box/mod/vod/query.php?cid=4&num=30",
+			"filter"=>""
+		),
+		array(
+			"id"=>"hudong",
+			"position"=>"0.7643,0.5,0.2357,0.5",
+			"title"=>"涪江行",
+			"icon"=>"",
+			"pic"=>"http://175.155.13.135/mcms/wp-content/uploads/2014/02/fujiang.jpg",
+			"api"=>"http://175.155.13.135/mcms/box/mod/vod/query.php?cid=17&num=30",
+			"filter"=>""
+		)
+	);
+$conf["api"] = array(
+			"related"=>"http://175.155.13.135/mcms/box/mod/vod/query.php",
+			"detail"=>"http://175.155.13.135/mcms/box/mod/vod/",
+			"views"=>"http://app.tvie.com.cn/api/v1/statistic/view/"
+		);
+return $conf;

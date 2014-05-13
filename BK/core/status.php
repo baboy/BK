@@ -43,7 +43,7 @@ class Status{
     }
 
     public static function errorNameDup(){
-        return new Status( array("status"=>Status::ErrorNameDupCode,"msg"=>Status::ErrorNameDupMsg) );
+        return new Status( array("status"=>Status::ErrorNameDupCode,"msg"=>"用户名已经存在！") );
     }
 
     public static function errorParam(){

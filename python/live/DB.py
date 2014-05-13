@@ -21,13 +21,14 @@ class DB:
 		#self.conn.close()
 	#@param a:article
 	def addItem(self,a):
-		sql = "INSERT INTO wp_live_channel_source (icon,name,source, rate, live_url) VALUES(%s,%s,%s,%s,%s)"
+		sql = "INSERT INTO wp_channel_live_source (icon,name,source, rate, live_url, reference_url) VALUES(%s,%s,%s,%s,%s,%s)"
 		param = (
 				a.get("icon"),
 				a.get("name"),
 				a.get("source"),
 				a.get("rate"),
-				a.get("live_url")
+				a.get("live_url"),
+				a.get("reference_url")
 				)
 		rowid = 0
 		try:

@@ -1,8 +1,8 @@
 class DBConstant:
-	DB_HOST = "m.tvie.com.cn"
-	DB_NAME = "mcms"
-	DB_USER = "mcms"
-	DB_PWD	= "mcms"
+	DB_HOST = "app.tvie.com.cn"
+	DB_NAME = "app"
+	DB_USER = "BKer"
+	DB_PWD	= "I love you, baby!"
 	
 	
 	

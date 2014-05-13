@@ -2,7 +2,7 @@
 	<a class="nh-back" role="push-back" href="#">&lt;返回</a>
 	<div class="nh-title-item-right" role="toggle" toggle="addBuild">+Add</div>
 	<div class="nh-title">
-		App Builds For <strong>[<?=$data->name?>]</strong> package:<strong>[<?=$data->package?>]</strong>
+		App Builds For <strong>[<?=$data->name?>]</strong> Product:<strong>[<?=$data->product_id?>]</strong>
 	</div>
 </div>
 <div>
@@ -20,7 +20,7 @@
 					<div class='div-input'>
 						<form action="/app/add/build" method="post"  onsubmit="return false">
 							<div><label>Product Name</label><span><?=$data->name?></span></div>
-							<div><label>Package</label><span><?=$data->package?></span></div>
+							<div><label>Product</label><span><?=$data->product_id?></span></div>
 							<div><label>channel:</label><input type='text' name='channel'/></div>
 							<div><label>version:</label><input type='text' name='version'/></div>
 							<div><label>build:</label><input type='text' name='build'/></div>
