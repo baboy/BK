@@ -64,6 +64,7 @@ class Epg extends bk\core\Model{
 			$where = sprintf($where, $param["start"],  $param["end"]);
 			$sql .= $where;
 		}
+		$sql .= " order by start_time asc";
 		$sql = sprintf($sql, $channelid);
 		$rows = $this->db->query($sql);
 		return $rows;

@@ -1,13 +1,6 @@
 <?php
 class SyncChannelHandler extends bk\core\HttpRequestHandler{
 
-	function getModel($modelName){
-		if (empty($this->model)) {
-			require_once dirname(__FILE__)."/../m/$modelName.php";
-			$this->model = new $modelName();
-		}
-		return $this->model;
-	}
 	function getLiveUrl($apiServer,$cid){
 	    $api = "http://$apiServer/api/getCDNByChannelId/$cid";
 	    $ret = CurlUtils::get($api);
@@ -72,7 +65,8 @@ class SyncChannelHandler extends bk\core\HttpRequestHandler{
 	    //处理数据 更新到数据库
 	    if($ret && isset($ret->result)){
 			$channels = $ret->result;
-			foreach( $channels as $k => $v ){
+			for( $i = 0, $n = count($channels); $i < $n; $i++ ){
+				$v = $channels[$i];
 				$channel = array();
 				foreach( $keyMap as $k2 => $v2 )
 			    	$channel[$v2] = $v->$k2;
@@ -105,8 +99,16 @@ class SyncChannelHandler extends bk\core\HttpRequestHandler{
 	    $results = array();
 		if ($ret && $ret->result){
 			$list = $ret->result;
-			foreach( $list as $epgs ){
-				foreach( $epgs as $item){
+			for( $i = 0, $n = count($list); $i < $n; $i++ ){
+				$epgs = $list[$i];
+				if($epgs){
+					$s = $epgs[0]->start_time;
+					$e = $epgs[count($epgs)-1]->start_time;
+					//echo "delete from wp_epg where channel_id=$cid and ( (start_time>$s and start_time<$e) or (end_time>$s and end_time<$e) )";
+					$this->db->execute("delete from wp_epg where channel_id=$cid and ( (start_time>$s and start_time<$e) or (end_time>$s and end_time<$e) )");
+				}
+				for($j = 0, $n2 = count($epgs); $j < $n2; $j++){
+					$item = $epgs[$j];
 					$epg = objectToArray($item);
 					$epg["channel_id"] = $cid;
 					$epg["program"] = parseProgramName($epg["name"]);

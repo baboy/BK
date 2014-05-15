@@ -85,6 +85,7 @@ class ApiConfigHandler extends bk\core\HttpRequestHandler{
 		if(isset($param["product_id"]) && $param["product_id"] == "com.tvie.ITV"){
 			$param["channel"] = "live";
 		}
+		//$param["channel"] = "v2";
 		if( !empty($param) && !empty($param["channel"]) ){
 			$channel = $param["channel"];
 			if ($channel=="tvie") {

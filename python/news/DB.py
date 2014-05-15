@@ -39,6 +39,11 @@ class DB:
 			self.cursor.execute(sql, param)
 			self.conn.commit()
 			rowid = self.cursor.lastrowid
+			if rowid>0:
+				cid = self.getCategoryId(a.get("cate_name","科技"));
+				if cid > 0:
+					self.addCategoryRelation(rowid, cid);
+
 		except Exception, e:
 			print "add item exception:", a.get("title"), e
 			rowid = 0
@@ -147,7 +152,31 @@ class DB:
 			print "add attr error", e
 			rowid = 0
 		return rowid
-
+	def getCategoryId(self,value):
+		sql = "select id from wp_media_category where module=%s AND `name`=%s limit 0,1"
+		param = (self.module, value)
+		ret = None
+		try:
+			count = self.cursor.execute(sql, param)
+			self.conn.commit()
+			if count > 0:
+				result = self.cursor.fetchone(); 
+				ret = result.get("id")
+			
+		except Exception, e:
+			print "getCategoryId:",e
+			ret = None
+		return ret
+	def addCategoryRelation(self, sid,cid):
+		sql = "insert into wp_media_category_relation(`sid`,`cid`) values(%s,%s)"
+		param = (str(sid), str(cid))
+		try:
+			print "addCategoryRelation:", param
+			self.cursor.execute(sql, param)
+			self.conn.commit()
+			
+		except Exception, e:
+			print "addCategoryRelation error:",e
 	def close(self):
 		self.cursor.close()
 		self.conn.close()

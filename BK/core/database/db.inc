@@ -134,6 +134,16 @@ class DB{
 		}
 		return $ret;
 	}
+	public function execute($sql){
+		$this->last_error = null;
+		$ret = false;
+		try {
+			$ret = db_query($sql);
+		} catch (Exception $e) {
+			$this->last_error = $e;
+		}
+		return $ret;
+	}
 
 	public function update($table, $param, $conditions){
 		$this->last_error = null;

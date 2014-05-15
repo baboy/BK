@@ -35,8 +35,6 @@ class Dao extends DB{
 		//$function = new ReflectionFunction($functionName);
 	 	//return $function->invokeArgs($args);
 	}
-	function execute(){
-	}
 	function getModel($modelName){
 		return new $modelName($this->config);
 	}

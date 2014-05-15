@@ -48,7 +48,7 @@ class RssParser( HTMLParser):
 		e = etree.parse(StringIO.StringIO(text))
 		rss = e.getroot()
 		for item in rss.findall('.//item'):
-			ar = {"node":"CONTENT"}
+			ar = {"node":"solo"}
 			fields = {"title":"title", "link":"link", "summary":"description", "content":"content","author":"author","pubdate":"pubDate","page_url":"guid"}
 			for k2 in fields:
 				k = fields[k2]
@@ -212,5 +212,5 @@ class ContentGrabber( HTMLParser):
 #parser = RssParser("http://cnbeta.feedsportal.com/c/34306/f/624776/index.rss")
 #parser = RssParser("http://feed.feedsky.com/cnbeta")
 #parser.parse()
-grabber = ContentGrabber()
-grabber.parse()
+#grabber = ContentGrabber()
+#grabber.parse()
