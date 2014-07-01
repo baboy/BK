@@ -21,3 +21,4 @@ Pods/
 web/static/images/desktop
 Podfile.lock
 *constants.py
+*.pyc
