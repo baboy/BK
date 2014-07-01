@@ -1,7 +1,7 @@
 <?php
 class Epg extends bk\core\Model{
 	function getChannels(){
-		$sql = "select order_no,channel_id,icon,type,name,live_url,epg_api,cate_id from wp_channel order by cate_id asc, channel_id asc";
+		$sql = "select order_no,preview,channel_id,icon,type,name,live_url,epg_api,cate_id from wp_channel order by cate_id asc, channel_id asc";
 		$sql = "select c.*,e.name as epg_name,e.start_time,e.end_time from ($sql)c left join (select * from wp_epg where start_time<%s and end_time>%s group by channel_id)e on e.channel_id=c.channel_id";
 		$t = time();
 		$t = "$t";
@@ -219,9 +219,15 @@ class Epg extends bk\core\Model{
 			$channel = $channel[0];
 		}
 		$sources = array();
-		$source = array("source"=>"Lavatech","channel_id"=>$channel->channel_id, "icon"=>$channel->icon, "name"=>$channel->name, "live_url"=>$channel->live_url);
+		$source = new \stdClass();
+		$source->source = "Lavatech";
+		$source->channel_id = $channel->channel_id;
+		$source->icon = $channel->icon;
+		$source->name = $channel->name;
+		$source->live_url = $channel->live_url;
+		$source->seek = 1;
 		$sources[] = $source;
-		$sql = "select icon, source,name, channel_id,live_url,reference_url from wp_channel_live_source where channel_id=$channel_id";
+		$sql = "select icon, seek, source,name, channel_id,live_url,reference_url from wp_channel_live_source where channel_id=$channel_id and status=1";
 		$rows = $this->db->query($sql);
 		global $site_url;
 		foreach($rows as $i=>$row){

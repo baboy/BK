@@ -1,5 +1,5 @@
 <?php
-header("location:http://175.155.13.135/mcms/xchannel/mod/vod/iBox.config.php");
+header("location:http://175.155.13.135/mcms/box/mod/vod/iBox.config.php");
 exit();
 $conf = array(
 		"background"=>"http://app.tvie.com.cn/static/images/desktop/mianyang-background.jpg",
@@ -7,7 +7,7 @@ $conf = array(
 		"api"=>array(
 			"related"=>"http://175.155.13.135/mcms/box/mod/vod/query.php",
 			"detail"=>"http://app.tvie.com.cn/api/v1/movie/detail/query/",
-			"views"=>"http://175.155.13.135/mcms/box/mod/statistic/view/"
+			"views"=>"http://175.155.13.135/mcms/box/mod/vod/stats.php"
 			)
 		);
 function getCategories($cid = null){

@@ -40,6 +40,7 @@ class DB:
 			print "add item exception:", a.get("name"), e
 			rowid = 0
 		return rowid
+
 	def where(self,p):
 		where = None
 		for k in p:
@@ -53,7 +54,43 @@ class DB:
 			else:
 				where = where + " "+k+"='"+str(v)+"' "
 		return where
-
+	def getChannelId(self,p):
+		sql = "select channel_id from wp_channel where %s" % (self.where(p),)
+		ret = None
+		try:
+			count = self.cursor.execute(sql)
+			self.conn.commit()
+			if count > 0:
+				result = self.cursor.fetchone(); 
+				ret = result.get("channel_id")
+		except Exception, e:
+			print "getChannelId:",e
+			ret = 0
+		return ret
+	def update(self,param,cond):
+		s_set = None
+		p = []
+		for k in param:
+			v = param[k]
+			if s_set is None:
+				s_set = ""
+			else:
+				s_set = s_set + ","
+			if v is None:
+				v = "NULL"
+			s_set = s_set + " %s=%%s " % (k,)
+			p.append(str(v))
+		s_where = self.where(cond)
+		sql = "UPDATE wp_channel SET %s WHERE %s" % (s_set, s_where)
+		print sql
+		ret = 0
+		try:
+			ret = self.cursor.execute(sql,tuple(p))
+			self.conn.commit()
+		except Exception, e:
+			print "update:",e
+			ret = 0
+		return True if ret > 0 else False
 	def close(self):
 		self.cursor.close()
 		self.conn.close()

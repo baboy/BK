@@ -18,4 +18,6 @@ xcuserdata
 DerivedData
 .idea/
 Pods/
+web/static/images/desktop
 Podfile.lock
+*constants.py

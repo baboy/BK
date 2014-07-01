@@ -56,7 +56,14 @@ class Validator{
 		$option = isset($fieldConf["option"]) ? true : false;
 		$hasDefVal = isset($fieldConf["default"]);
 		$option |= $hasDefVal;
-		$defVal = $hasDefVal ? $fieldConf["default"] : null;
+		//$defVal = $hasDefVal ? $fieldConf["default"] : null;
+		$defVal = null;
+		if( $hasDefVal ) {
+			$defVal = $fieldConf["default"] ;
+			if(hasSystemValue($defVal)){
+				$defVal = getSystemValue($defVal);
+			}
+		}
 		$type = $fieldConf["type"];
 
 		$val = $this->requestValue($k);

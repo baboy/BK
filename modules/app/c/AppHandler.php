@@ -47,7 +47,7 @@ class AppHandler extends bk\core\HttpRequestHandler{
 	function addBuildParam(){
 		$fields = array(
 				"appid"=>array("type"=>"int"),
-				"platform"=>array("type"=>"string","option"=>true),
+				"os"=>array("type"=>"string","option"=>true),
 				"version"=>array("type"=>"string"),
 				"channel"=>array("type"=>"string"),
 				"build"=>array("type"=>"string"),

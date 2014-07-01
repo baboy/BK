@@ -15,9 +15,15 @@ class EpgHandler extends bk\core\HttpRequestHandler{
 		$index = 0;
 		function _f(&$o){
 			global $site_url, $index;
+			$ver = 1.0;
+			if(!empty(requestValue("version"))){
+				$ver = floatval(requestValue("version"));
+			}
 			if ( gettype($o) == "array") {
 				if (isset($o["epg_api"])) {
 					$epg_api = $site_url."/api/v1/live/epgs/".$o["channel_id"]."/?timestamp={timestamp}";
+					if($ver<1.1)
+						$o["live_url"] = "$site_url/m3u8/?url=".$o["live_url"];
 					$o["epg_api"] = $epg_api;
 					$o["display_id"] = ++$index;
 					return;
@@ -108,8 +114,20 @@ class EpgHandler extends bk\core\HttpRequestHandler{
 	}
 	function queryChannelSource($param){
 		$channel = $this->model->queryChannelSourceList($param["channel_id"]);
+		$channel = objectToArray($channel);
+		$this->updateChannelEpgApi($channel);
 		$status = bk\core\Status::status();
 		$status->data = $channel;
+		global $site_url;
+		if( isset($channel->sources)){
+			foreach($channel->sources as &$source){
+				if(!empty($source)){
+					if($source->source == "Lavatech"){
+						$source->live_url = "$site_url/m3u8/?url=".$source->live_url;
+					}
+				}
+			}
+		}
 		return $status;
 
 	}

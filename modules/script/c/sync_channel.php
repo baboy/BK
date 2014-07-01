@@ -53,13 +53,14 @@ class SyncChannelHandler extends bk\core\HttpRequestHandler{
 			);
 	}
 	function syncChannels($param){
+		return $this->sysncFrom();
 		$apiServer = $param["apiServer"];
 		$api = "http://$apiServer/api/getChannels";
 
 		//获取全部频道列表
 	    $ret = CurlUtils::get($api);
 	    $ret = json_decode($ret);
-	    $keyMap = array("id"=>"channel_id", "display_name"=>"name");
+	    $keyMap = array("id"=>"channel_id"/*, "display_name"=>"name"*/);
 	    $status = bk\core\Status::status();
 	    $results = array();
 	    //处理数据 更新到数据库
@@ -74,12 +75,13 @@ class SyncChannelHandler extends bk\core\HttpRequestHandler{
 			    if($pic)
 			    	$pic = "http://$apiServer$pic";
 			    $channel["live_url"] = $this->getLiveUrl($apiServer, $channel["channel_id"]);
-			    $channel["sync_epg_api"] = $this->getEpgUrl($apiServer, $channel["channel_id"]);
-				$channel["cate_id"] = $this->getCateId($channel["name"]);
-			    $channel["icon"] = $pic;
-				$channel["type"] = $channel["cate_id"] == 6 ? "radio" : "tv";
-
-			    $ret = $this->db->insert("channel", $channel);
+			    //$channel["sync_epg_api"] = $this->getEpgUrl($apiServer, $channel["channel_id"]);
+				//$channel["cate_id"] = $this->getCateId($channel["name"]);
+				//if(!empty($pic))
+			    	//$channel["icon"] = $pic;
+				//$channel["type"] = $channel["cate_id"] == 6 ? "radio" : "tv";
+				$ret = $this->db->update("channel", $channel, array("channel_id"=>$channel["channel_id"]));
+			    //$ret = $this->db->insert("channel", $channel);
 			    if($ret){
 			    	$channel["state"] = $ret;
 			    }else{
@@ -159,5 +161,29 @@ class SyncChannelHandler extends bk\core\HttpRequestHandler{
 		}
 		$status->data = $results;
 		return $status;
+	}
+	function sysncFrom(){
+		$ret = CurlUtils::get("http://1.202.169.185/api/public/mcms/getLivelist2");
+		$ret =  json_decode($ret);
+		$groups = $ret->data->channels;
+
+		$results = array();
+		foreach ($groups as $key => $group) {
+			$channels = $group->data;
+			foreach ($channels as $key => $channel) {
+				$ret = $this->db->update("channel", array("live_url"=>$channel->liveUrl), array("channel_id"=>$channel->channelId));
+				if($ret){
+			    	$channel->state = $ret;
+			    }else{
+			    	$channel->error = $this->db->last_error;
+			    }
+			    $results[] = $channel;
+			}
+		}
+
+		$status = bk\core\Status::status();
+		$status->data = $results;
+		return $status;
+		
 	}
 }

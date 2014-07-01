@@ -48,6 +48,16 @@ function requestValue($k){
 	}
 	return false;
 }
+function hasSystemValue($key){
+	return getSystemValue($key)===false ? false: true;
+}
+function getSystemValue($key){
+	$sysValues = array("{ip}"=>getClientIp());
+	if( isset($sysValues[$key]) ){
+		return $sysValues[$key];
+	}
+	return false;
+}
 function _getHttpRequestConfigValue($k, $arr){
 	if (!isset($arr[$k]) ) {
 		return requestValue($k);
@@ -56,7 +66,13 @@ function _getHttpRequestConfigValue($k, $arr){
 	$option = isset($v["option"]) ? true : false;
 	$hasDefVal = isset($v["default"]);
 	$option |= $hasDefVal;
-	$defVal = $hasDefVal ? $v["default"] : null;
+	$defVal = null;
+	if( $hasDefVal ) {
+		$defVal = $v["default"] ;
+		if(hasSystemValue($defVal)){
+			$defVal = getSystemValue($defVal);
+		}
+	}
 	$type = $v["type"];
 	$val = requestValue($k);
 	if($val && isset($v["trim"]) && $v["trim"]){
