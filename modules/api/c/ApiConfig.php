@@ -111,7 +111,7 @@ class ApiConfigHandler extends bk\core\HttpRequestHandler{
 	}
 	function itv(){
 		$status = bk\core\Status::status();
-		$status->data = array("splash"=>array("pic"=>"http://pic.dbw.cn/0/05/67/27/5672789_845897.jpg"));
+		$status->data = array("splash"=>array("pic"=>"http://app.tvie.com.cn/static/images/desktop/desktop01.jpg"));
 		$status->data["config"] = array(
 			"app_store" => "https://itunes.apple.com/cn/app/zhong-guo-shou-ji-dian-shi/id431046861?l=en&mt=8",
 			"app_store_comment_msg" => "您的肯定是我们进步的动力，如果您觉得我们的App还可以，请赏个好评吧！",
@@ -124,16 +124,16 @@ class ApiConfigHandler extends bk\core\HttpRequestHandler{
 	function platform(){
 
 		$status = bk\core\Status::status();
-		$status->data = array("splash"=>array("pic"=>"http://pic.dbw.cn/0/05/67/27/5672789_845897.jpg"));
+		$status->data = array("splash"=>array("pic"=>""));
 		$status->data["background"] = "http://app.tvie.com.cn/storage/79W43xQcPFsl4uFaiBF5VKnQMBiHQ";
-		//$status->data["background"] = "http://app.tvie.com.cn/static/images/desktop/mianyang.png";
+		$status->data["background"] = "http://175.155.13.135/mcms/static/images/desktop/mianyang-splash.jpg";
 		$status->data["applications"] = array(
 			array(
 					"level"=>100,
 					"name"=>"iBox-Vod",
 					"package"=>"com.lava.ibox.vod",
 					"version"=>"1",
-					"download_url"=>"http://app.tvie.com.cn/app/build/download/73"
+					"download_url"=>"http://app.tvie.com.cn/storage/79YAiDVnwGuL0UL7QWvE3QpZgz3kc"
 				)
 		);
 		return $status;

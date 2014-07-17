@@ -31,6 +31,7 @@
 								<input type="hidden" name="download_url" id="download_url" display="display-download_url"/>
 							</div>
 							<input type="hidden" name="appid" value="<?=$data->id?>"/>
+							<input type="hidden" name="product_id" value="<?=$data->product_id?>"/>
 							<div class='div-submit'><button role='add-build' class='submit'>Submit</button></div>
 						</form>
 					</div>

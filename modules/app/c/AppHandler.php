@@ -48,6 +48,7 @@ class AppHandler extends bk\core\HttpRequestHandler{
 		$fields = array(
 				"appid"=>array("type"=>"int"),
 				"os"=>array("type"=>"string","option"=>true),
+				"product_id"=>array("type"=>"string","option"=>true),
 				"version"=>array("type"=>"string"),
 				"channel"=>array("type"=>"string"),
 				"build"=>array("type"=>"string"),
