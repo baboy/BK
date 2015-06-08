@@ -1,7 +1,7 @@
 <?php
 class AboutHandler extends bk\core\HttpRequestHandler{
 	function init(){
-		$this->getModel("SystemVar");
+		//$this->getModel("SystemVar");
 	}
 
 	function queryParam(){
@@ -11,7 +11,8 @@ class AboutHandler extends bk\core\HttpRequestHandler{
 		return $fields;
 	}
 	function query($param){
-		$content = $this->model->get("about");
+		global $sysVar;
+		$content = $sysVar->get("about");
 		if($param["output"] == "html"){
 			echo $content;
 			exit();

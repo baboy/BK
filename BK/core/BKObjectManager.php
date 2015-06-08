@@ -116,16 +116,20 @@ class BKObjectProxy{
 		$aop = isset( $this->aop[$aspectId] ) ? $this->aop[$aspectId] : false;
 		//aop:before
 		// TODO:
-		$this->callAspect("before", $aop);
+		$params = array(&$args);
+		$this->callAspect("before", $aop, $params);
 		$ret = $method->invokeArgs($obj, $args);
 		//aop:after
 		//TODO:
-		$this->callAspect("after", $aop);
+		if(!empty($ret)){
+			$params[] = &$ret;
+		}
+		$this->callAspect("after", $aop, $params);
 
 		return $ret;
 
 	}
-	public function callAspect($aspectName, $aop = null){
+	public function callAspect($aspectName, &$aop = null, &$params=null){
 		if ( empty( $aop ) || !isset( $aop[$aspectName] ) ) {
 			return false;
 		}
@@ -134,7 +138,8 @@ class BKObjectProxy{
 			$aspect = $aspects[$i];
 			$action = $aspect["action"];
 			$obj = new BKObjectProxy($aspect, $this->aop);
-			$obj->$action();
+			//$obj->$action();
+			call_user_func_array(array($obj,$action), $params);
 		}
 	}
 

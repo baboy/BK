@@ -73,6 +73,7 @@ class MediaHandler extends bk\core\HttpRequestHandler{
 					"query"=>$GLOBALS["site_url"]."/api/v1/news/query/"
 				);
 		}
+		array_push($categories, $categories[0]);
 		$status->data = $categories;
 		return $status;
 	}

@@ -95,11 +95,16 @@ class ApiConfigHandler extends bk\core\HttpRequestHandler{
 		//$param["channel"] = "v2";
 		if( !empty($param) && !empty($param["channel"]) ){
 			$channel = $param["channel"];
-			if ($channel=="tvie") {
-				$channel="v1";
+			if ($channel=="lava") {
+				//$channel="mianyang";
 			}
 			if ($channel=="mianyang") {
 				$channel="mianyang2";
+			}
+			if($channel == "chengdu-junqu" || $channel == "jingzhong"){
+				//header("Location:http://211.103.128.226:5678/mauna/api/client/ibox/config?token=CQ1ZkS8MQLRep3Z4ihHzEJkF");
+				header("Location:http://10.33.2.69/mauna/api/client/ibox/config?token=CQ1ZkS8MQLRep3Z4ihHzEJkF");
+				exit();
 			}
 			$conf = include "$channel.config.php";
 		}

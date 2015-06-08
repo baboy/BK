@@ -16,13 +16,21 @@ class EpgHandler extends bk\core\HttpRequestHandler{
 		function _f(&$o){
 			global $site_url, $index;
 			$ver = 1.0;
+			$os = null;
+			$pid = null;
 			if(!empty(requestValue("version"))){
 				$ver = floatval(requestValue("version"));
+			}
+			if(!empty(requestValue("os"))){
+				$os = floatval(requestValue("os"));
+			}
+			if(!empty(requestValue("product_id"))){
+				$pid = floatval(requestValue("product_id"));
 			}
 			if ( gettype($o) == "array") {
 				if (isset($o["epg_api"])) {
 					$epg_api = $site_url."/api/v1/live/epgs/".$o["channel_id"]."/?timestamp={timestamp}";
-					if($ver<1.1)
+					if($ver<1.1 && $os != "android" && $pid!="")
 						$o["live_url"] = "$site_url/m3u8/?url=".$o["live_url"];
 					$o["epg_api"] = $epg_api;
 					$o["display_id"] = ++$index;
@@ -55,6 +63,14 @@ class EpgHandler extends bk\core\HttpRequestHandler{
 		return $fields;
 	}
 	function queryChannels($param){
+		$cacheFile = $_SERVER["DOCUMENT_ROOT"]."/cache/".md5($_SERVER["REQUEST_URI"]);
+		
+		if(file_exists($cacheFile)){
+			$handle = fopen($cacheFile, "r");
+		    $contents = fread($handle, filesize ($cacheFile));
+		    fclose($handle);
+		    return json_decode($contents);
+		}
 		$channels = $this->model->getChannels();
 		$channelParam = array();
 		$data = array("live_backward_days"=> 5,
@@ -95,6 +111,8 @@ class EpgHandler extends bk\core\HttpRequestHandler{
 		$data = $this->model->getEpgs($param);
 		$status = bk\core\Status::status();
 		$status->data = array($data);
+		$status->start = $param["start"];
+		$status->end = $param["end"];
 		return $status;
 	}
 	function queryHotChannels(){

@@ -35,6 +35,22 @@ class Dao extends DB{
 		//$function = new ReflectionFunction($functionName);
 	 	//return $function->invokeArgs($args);
 	}
+	function execute($sql, $param=null){
+
+		$re_table = '/\[([^ ]+)\]/';
+		$sql = preg_replace($re_table, DB_TABLE_PREFIX."$1", $sql);
+		if($param){
+			$re_placeholder = '/\{([^ ]+)\}/';
+			$n = preg_match_all($re_placeholder, $sql, $m);
+			if($n && $m){
+				$m = $m[1];
+				foreach($m as $k){
+					$sql = str_replace("{{$k}}", addslashes($param[$k]), $sql);
+				}
+			}
+		}
+		return parent::execute($sql);
+	}
 	function getModel($modelName){
 		return new $modelName($this->config);
 	}

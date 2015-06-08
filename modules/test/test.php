@@ -36,10 +36,11 @@ class Test{
 		//var_dump($ret);
 		//return array("title"=>"Test title", "test"=>"test body","data"=>$ret);
 	}
-	public function after(){
+	public function after($param, &$ret){
 		//echo "aop:after";
+		$ret->error = "No Error!";
 	}
-	public function before(){
+	public function before($param){
 		//echo "aop:before";
 	}
 }

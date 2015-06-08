@@ -226,7 +226,7 @@ class Epg extends bk\core\Model{
 		$source->name = $channel->name;
 		$source->live_url = $channel->live_url;
 		$source->seek = 1;
-		$sources[] = $source;
+		//$sources[] = $source;
 		$sql = "select icon, seek, source,name, channel_id,live_url,reference_url from wp_channel_live_source where channel_id=$channel_id and status=1";
 		$rows = $this->db->query($sql);
 		global $site_url;

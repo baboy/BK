@@ -14,7 +14,61 @@ http://api.tv.sohu.com/v4/album/videos/6089917.json?page_size=50&api_key=695fe82
 
 it_xie@hotmail.com  234477833
 crazyforzhi1987@gmail.com 709796618
+网易盖楼
+http://comment.api.163.com/api/json/post/list/new/normal/3g_bbs/AB0BQTSE00963VRR/desc/10/10/10/2/2
 
 吴尉：
 
 张盈辉 15801207618
+
+CAUTO_INCREMENT
+CREATE TABLE IF NOT EXISTS `new_schema1`.`loan_consultant_relation` (
+  `id` INT NOT NULL DEFAULT AUTO_INCREMENT,
+  `loan_product_id` INT NOT NULL,
+  `consultant_id` INT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+
+
+CREATE TABLE IF NOT EXISTS `xiaozhu`.`t_loan_product` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `org_id` INT NOT NULL COMMENT '机构id',
+  `title` VARCHAR(64) NOT NULL,
+  `type` ENUM('individual','enterprise') NOT NULL DEFAULT 'individual',
+  `amount_min` FLOAT ZEROFILL NOT NULL COMMENT '最小贷款额度',
+  `amount_max` FLOAT ZEROFILL NOT NULL COMMENT '最大贷款额度',
+  `time_limit_min` INT NOT NULL COMMENT '贷款最小期限',
+  `time_limit_max` INT NOT NULL COMMENT '贷款最大期限',
+  `apply_count` INT ZEROFILL NOT NULL COMMENT '贷款申请人数',
+  `loan_count` INT ZEROFILL NOT NULL COMMENT '贷款成功人数',
+  `weight` TINYINT(3) ZEROFILL NOT NULL COMMENT '推荐权重',
+  `repayment_mode` ENUM('instalment') NOT NULL DEFAULT 'instalment' COMMENT '还款方式 分期付款或其他',
+  `loan_days` INT NOT NULL DEFAULT 3 COMMENT '放款时间（默认3天）',
+  `view_count` INT ZEROFILL NOT NULL COMMENT '人气，查看次数',
+  `description` VARCHAR(4096) NULL,
+  `prepayment_desc` VARCHAR(2048) NULL COMMENT '提前还款说明',
+  `rate_id` INT NOT NULL COMMENT '对应利率表\n',
+  `note` VARCHAR(128) NULL COMMENT '产品一句话说明',
+  `apply_condition_desc` VARCHAR(2048) NULL COMMENT '申请条件说明\n',
+  `borrower_material_desc` VARCHAR(2048) NULL COMMENT '贷款人准备材料',
+  `category` ENUM('credit','mortgage','house') NULL COMMENT '贷款类型：信用贷款，抵押贷款、房贷',
+  `rate_min` FLOAT NULL COMMENT '最小利率',
+  `rate_max` FLOAT NULL COMMENT '最大利率',
+  `create_time` DATETIME NULL,
+  `update_time` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP on update ON UPDATE CURRENT_TIMESTAMP,
+  `c_res1` VARCHAR(64) NULL,
+  `c_res2` VARCHAR(64) NULL,
+  `c_res3` VARCHAR(64) NULL,
+  `i_res1` INT NULL,
+  `i_res2` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `org_id_idx` (`org_id` ASC),
+  CONSTRAINT `org_id`
+    FOREIGN KEY (`org_id`)
+    REFERENCES `xiaozhu`.`t_org` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci
+COMMENT = '贷款产品'

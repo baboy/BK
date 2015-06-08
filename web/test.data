@@ -163,4 +163,17 @@ URI
 http://tools.ietf.org/html/rfc3986
 
 
+sudo dd bs=4m if=CentOS-6.5-x86_64-bin-DVD1.iso of=/dev/disk2s1
+
+plink.exe -v -C -N -D 0.0.0.0:1080 highbird@104.128.81.96 -pw 2cf7cb -P 27639
+
+ssh -D 8086 -Nf highbird@104.128.81.96 -p 27639
+
+元浩瀚 13K 山东大学
+技术太不熟悉
+
+秦影 东北大学 逻辑不清
+
+12k
+
 

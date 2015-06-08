@@ -13,7 +13,7 @@ $conf = array(
 				"position"=>"0,0,0.2286,1",
 				"app"=>"com.tvie.ibox.live.mianyang",
 				"param"=>array(
-						"query_channels_api"=>"http://api.vdnplus.com/api/public/mcms/getLivelist"
+						"query_channels_api"=>""
 					),
 				"title"=>"直播",
 				"icon"=>"",

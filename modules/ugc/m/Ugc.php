@@ -18,31 +18,33 @@ class Ugc extends bk\core\Model{
 					$attrs = $medias[$sid];
 				}
 				$att = $item;
-				$type = $item->type;
-				if ($type && !isset($attrs[$type])) {
-					$attrs[$type] = array();
+				$group = $item->group;
+				if ($group && !isset($attrs[$group])) {
+					$attrs[$group] = array();
 				}
 				$meta = $item->metadata;
 				if (!empty($meta)) {
 					$meta = json_decode($meta);
-				}
-				if (!empty($meta)) {
-					foreach ($meta as $key => $value) {
-						$att->$key = $value;
-					}
+					$att->metadata = $meta;
 				}
 				if (isset($att->metadata)) {
 					unset($att->metadata);
 					unset($att->original);
 				}
-				if ( isset($attrs[$type]) ) {
+				if ( isset($attrs[$group]) ) {
 
 					$keys = array("id","url","thumbnail");
 					$a = array();
 					foreach ( $keys as $k) {
-						$a[$k] = $att->$k;
+						if(!empty($att->$k))
+							$a[$k] = $att->$k;
 					}
-					$attrs[$type][] = $a;
+					if (!empty($meta)) {
+						foreach ($meta as $key => $value) {
+							$a[$key] = $value;
+						}
+					}
+					$attrs[$group][] = $a;
 				}
 				$medias[$sid] = $attrs;
 			}
@@ -83,7 +85,7 @@ class Ugc extends bk\core\Model{
 			}
 			$where .= sprintf(" t.%s='%s' ",$key,addslashes($value));
 		}
-		$sql = "SELECT t.id as sid,t.uid,t.content, t.title,t.tags,t.pubdate FROM wp_ugc t $where order by id desc LIMIT $offset, $count";
+		$sql = "SELECT t.id as sid,t.uid,t.content,t.addr,t.lat,t.lng, t.title,t.tags,t.pubdate FROM wp_ugc t $where order by id desc LIMIT $offset, $count";
 		$sql = "SELECT ugc.*,u.uid,u.nickname,u.avatar_thumbnail FROM ($sql) ugc LEFT JOIN wp_passport_user u ON ugc.uid=u.uid";
 		$medias = $this->db->query($sql);
 		if($medias){
@@ -110,8 +112,12 @@ class Ugc extends bk\core\Model{
 		$ret = $this->db->insert(TABLE_UGC, $param);
 		return $ret;
 	}
-	function addAttr($sid, $type, $url, $thumbnail){
-		$param = array("sid"=>$sid,"type"=>$type, "url"=>$url, "thumbnail"=>$thumbnail);
+	function addAttr($sid, $group, $url, $thumbnail,$metadata){
+		if(!empty($metadata)){
+			$metadata = json_encode($metadata);
+		}
+
+		$param = array("sid"=>$sid,"group"=>$group, "url"=>$url, "thumbnail"=>$thumbnail, "metadata"=>$metadata);
 		$ret = $this->db->insert(TABLE_UGC_FILE, $param);
 		return $ret;
 	}

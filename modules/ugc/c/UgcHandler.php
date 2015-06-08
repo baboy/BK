@@ -23,6 +23,7 @@ class UgcHandler extends bk\core\HttpRequestHandler{
                         "appid"         =>  array('type'=>"string"),
                         "content"       =>  array("type"=>"string"),
                         "tags"          =>  array("type"=>"string","option"=>true),
+                        "tags"          =>  array("type"=>"string","option"=>true),
 
                         "images"           =>  array("type"=>"json","option"=>true),
                         "video"           =>  array("type"=>"json","option"=>true),
@@ -33,7 +34,7 @@ class UgcHandler extends bk\core\HttpRequestHandler{
                         "lat"           =>  array("type"=>"float","option"=>true),
                         "lng"           =>  array("type"=>"float","option"=>true),
                         "addr"          =>  array("type"=>"string","option"=>true),
-                        "metadata"      =>  array("type"=>"string","option"=>true)
+                        "metadata"      =>  array("type"=>"json","option"=>true)
                     );
 		return $fields;
 	}
@@ -65,7 +66,17 @@ class UgcHandler extends bk\core\HttpRequestHandler{
 		}
 		if(isset($param["video"])){
 			$video = $param["video"];
-			$_id = $this->model->addAttr( $sid,"videos",$video["url"], $video["thumbnail"] );
+			$url = null;
+			$meta = null;
+			if(!empty($video["metadata"])){
+				$meta = $video["metadata"];
+				if(!empty($meta)){
+					$rtmp = $meta["rtmp"];
+					$uri = parse_url($rtmp);
+					$url = "http://".$uri["host"].$uri["path"]."/test/multistream.m3u8";
+				}
+			}
+			$_id = $this->model->addAttr( $sid,"videos",$url, $video["thumbnail"] , $meta);
 			if($_id){
 				$param["video"]["id"] = $_id;
 			}else{

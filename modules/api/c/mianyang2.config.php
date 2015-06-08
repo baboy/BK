@@ -82,7 +82,7 @@ function createModules(){
 					"app"=>"com.tvie.ibox.live.mianyang",
 					"param"=>array(
 							"api"=>"http://app.tvie.com.cn/api/v1/live/channels",
-							"query_channels_api"=>"http://api.vdnplus.com/api/public/mcms/getLivelist",
+							"query_channels_api"=>"http://app.tvie.com.cn/api/v1/live/channels",
 							"channel_id"=>1
 						)
 				);

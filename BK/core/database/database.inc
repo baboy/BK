@@ -1335,13 +1335,13 @@ abstract class Database {
 		array (
 			'default' => 
 				array (
-				  'database' => 'app',
-				  'username' => 'BKer',
-				  'password' => 'I love you, baby!',
-				  'host' => '114.215.109.123',
-				  'port' => '3306',
-				  'driver' => 'mysql',
-				  'prefix' => 'wp_'
+				  'database' => DB_NAME,
+				  'username' => DB_USER,
+				  'password' => DB_PASSWORD,
+				  'host' => DB_HOST,
+				  'port' => DB_PORT,
+				  'driver' => DB_DRIVER,
+				  'prefix' => DB_TABLE_PREFIX
 				),
 			),
 	);

@@ -69,7 +69,7 @@ class Media extends bk\core\Model{
 			}
 			$where .= sprintf(" t.%s='%s' ",$key,addslashes($value));
 		}
-		$sql = "SELECT t.id as sid,t.author,t.summary, t.title,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count FROM wp_media t $where order by id desc LIMIT $offset, $count";
+		$sql = "SELECT t.id as sid,t.author,t.summary, t.title,t.tip,t.tag,t.thumbnail,t.pic,t.score,t.views,t.actors,t.director,t.area,t.pubdate,t.total_count,t.update_count,t.comment_count FROM wp_media t $where order by id desc LIMIT $offset, $count";
 		$medias = $this->db->query($sql);
 		if($medias){
 			$sids = array();

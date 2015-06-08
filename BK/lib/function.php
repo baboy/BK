@@ -260,3 +260,17 @@ function is_image( $fn ){
 	return in_array($ext, $exts) ? true : false;
 	
 }
+function compareVersion($ver1,$ver2){
+	$a1 = explode(".", $ver1);
+	$a2 = explode(".", $ver2);
+	$n = count($a1);
+	$n = $n>count($a2)?count($a2):$n;
+	for($i = 0; $i<$n; $i++){
+		$v1 = intval($a1[$i]);
+		$v2 = intval($a2[$i]);
+		if($v1==$v2)
+			continue;
+		return $v1>$v2?1:-1;
+	}
+	return count($a1)>count($a2)?1:(count($a1)<count($a2)?-1:0);
+}

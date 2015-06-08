@@ -1,67 +1,71 @@
 <?php
-$s = "电视剧:皇粮胡同十九号(双语)(11)";
-$s = "第一动画乐园(上午版)：十二生肖闯江湖";
-function parseProgramName($s){
-	$confs = array(
-			array("directive" => "filter", "re" => '/(.+)(?:[-_\/ ])+.*$/'),
-			array("directive" => "filter", "re" => '/([0-9]+)$/', "replace" => true),
-			array("directive" => "filter", "re" => '/([^\:]*(?:剧场|专场|剧苑|电视剧|版)\)?(?:[\:]|之|：))/', "replace" => true),
-			array("directive" => "filter", "re" => '/\(.+\)$/', "replace" => true),
-		);
-	$name = $s;
-	for($i = 0, $n = count($confs); $i < $n; $i++){
-		$conf = $confs[$i];
-		$name = trim($name);
-		if($conf["directive"] == "filter"){
-			$re = $conf["re"];
-			if( isset($conf["replace"]) && $conf["replace"]){
-				$name = preg_replace($re, "", $name);
-				continue;
-			}
-			if( preg_match($re, $name, $matches) > 0){
-				$name = $matches[1];
-				continue;
-			}
-		}
-	}
-	return trim($name);
-}
-function parseProgramIndex($s){
-	$confs = array(
-			array("directive" => "filter", "re" => '/(.+)(?:[-_\/\: ]|：)+.*$/'),
-			array("directive" => "filter", "re" => '/([^\:]*(?:剧场|专场|剧苑)(?:[\:]|之|：))/', "replace" => true),
-		);
-	$index = 0;
-	$re_num = '/\(?([0-9]+)\)?$/';
+$url = "rtmp://10.33.0.132:1935/tvie/test";
+$url = parse_url($url);
+$m3u8 = "http://".$url["host"].$url["path"]."/sd.m3u8";
+var_dump($m3u8);
 
-	$name = $s;
-	for($i = 0, $n = count($confs); $i < $n; $i++){
-		$conf = $confs[$i];
-		$name = trim($name);
+var_dump($_GET);
 
-		if( preg_match($re_num, $name, $matches) > 0){
-			$i = intval( $matches[1] );
-			if($i > 0)
-				$index = $i;
-		}
-		if($conf["directive"] == "filter"){
-			$re = $conf["re"];
-			if( isset($conf["replace"]) && $conf["replace"]){
-				$name = preg_replace($re, "", $name);
-			}
-			else if( preg_match($re, $name, $matches) > 0){
-				$name = $matches[1];
-			}
-		}
-	}
-	if( preg_match($re_num, $name, $matches) > 0){
-		$i = intval( $matches[1] );
-		if($i > 0)
-			$index = $i;
-	}
-	return $index;
+http://www.cibntvm.com/suntv/channel
+{
+english_name: "CCTV1",
+chinese_name: "央视综合",
+icon: "http://stream.suntv.tvmining.com/icon/CCTV1.png",
+picture: "http://stream.suntv.tvmining.com/picture/CCTV1.jpg",
+live_url: "http://stream.suntv.tvmining.com/approve/live",
+vod_url: "http://stream.suntv.tvmining.com/approve/vod",
+epg_url: "http://stream.suntv.tvmining.com/approve/epginfo",
+picture_url: "http://stream.suntv.tvmining.com/approve/capture",
+picshot_url: "http://stream.suntv.tvmining.com/approve/picshot",
+tag: "央视"
+},
+http://www.cibntvm.com/suntv/public/livePlayer.html
+
+array(7) {
+  ["english_name"]=>
+  string(5) "CCTV1"
+  ["title"]=>
+  string(12) "央视综合"
+  ["live_src"]=>
+  string(45) "http://stream.suntv.tvmining.com/approve/live"
+  ["poster"]=>
+  string(50) "http://stream.suntv.tvmining.com/picture/CCTV1.jpg"
+  ["vod_src"]=>
+  string(44) "http://stream.suntv.tvmining.com/approve/vod"
+  ["shot_src"]=>
+  string(48) "http://stream.suntv.tvmining.com/approve/capture"
+  ["random"]=>
+  string(13) "1420797105609"
 }
-$name = parseProgramName($s);
-echo $s."<br/>";
-echo $name."<br/>";
-echo parseProgramIndex($s);
+
+
+
+
+http://stream.suntv.tvmining.com/approve/live?channel=CCTV1&type=iptv&suffix=m3u8&access_token=QmRubnQwN2xvZ3RBRnc1OFUyNDF3MjdnOTgxNDIwNzk2OTA5ODU1
+array(4) {
+  ["channel"]=>
+  string(5) "CCTV1"
+  ["type"]=>
+  string(4) "iptv"
+  ["suffix"]=>
+  string(4) "m3u8"
+  ["access_token"]=>
+  string(52) "QmRubnQwN2xvZ3RBRnc1OFUyNDF3MjdnOTgxNDIwNzk2OTA5ODU1"
+}
+
+http://stream.suntv.tvmining.com/approve/vod?channel=CCTV1&startTime=1420299613&endTime=1420302348&type=iptv&suffix=m3u8&access_token=QmRubnQyOERDcU5EQGdILkprdTlfU0hURG51Q0thXzZnRi1adEs1OHYyNDFJMjdhOTgxNDIwNzk2OTU2NDMz
+array(6) {
+  ["channel"]=>
+  string(5) "CCTV1"
+  ["startTime"]=>
+  string(10) "1420299613"
+  ["endTime"]=>
+  string(10) "1420302348"
+  ["type"]=>
+  string(4) "iptv"
+  ["suffix"]=>
+  string(4) "m3u8"
+  ["access_token"]=>
+  string(84) "QmRubnQyOERDcU5EQGdILkprdTlfU0hURG51Q0thXzZnRi1adEs1OHYyNDFJMjdhOTgxNDIwNzk2OTU2NDMz"
+}
+
